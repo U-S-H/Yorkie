@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Crust Pizza - Ultimate Super App</title>
-    <!-- Tailwind CSS Standard CDN -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -19,7 +19,7 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Leaflet CSS for Live Tracking Map -->
+    <!-- Leaflet CSS for Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -53,8 +53,23 @@
 
         #map { height: 180px; width: 100%; border-radius: 1rem; z-index: 1; }
 
-        /* Scratch Card Canvas */
-        #scratch-canvas { cursor: pointer; touch-action: none; }
+        /* Interactive Visual Pizza Canvas */
+        .pizza-base {
+            width: 140px; height: 140px; border-radius: 50%;
+            background: #d97706; border: 8px solid #b45309;
+            position: relative; transition: all 0.3s ease;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
+        }
+        .pizza-cheese {
+            position: absolute; inset: 4px; border-radius: 50%;
+            background: #facc15; transition: all 0.3s ease;
+        }
+        .topping {
+            position: absolute; width: 14px; height: 14px; border-radius: 50%; transition: transform 0.2s;
+        }
+        .top-pepperoni { background: #dc2626; border: 1px solid #991b1b; }
+        .top-mushroom { background: #78716c; border-radius: 4px; }
+        .top-olives { background: #000000; border: 2px solid #334155; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 dark:bg-slate-950 dark:text-slate-100 light:bg-slate-50 light:text-slate-900 max-w-md mx-auto min-h-screen relative border-x border-slate-800/80 shadow-2xl pb-24">
@@ -72,7 +87,7 @@
                 <h1 class="font-black text-lg tracking-wide text-white dark:text-white light:text-slate-900 leading-tight">CRUST PIZZA</h1>
                 <div class="flex items-center space-x-1 text-yellow-400 text-[11px] font-bold">
                     <i class="fa-solid fa-location-dot text-[10px]"></i>
-                    <select id="branch-select" onchange="updateDeliveryCharges()" class="bg-transparent border-none text-yellow-400 font-bold focus:outline-none cursor-pointer">
+                    <select id="branch-select" class="bg-transparent border-none text-yellow-400 font-bold focus:outline-none cursor-pointer">
                         <option value="Astore Main" class="bg-slate-900 text-white">Astore Main Branch</option>
                         <option value="Eidgah Branch" class="bg-slate-900 text-white">Astore Eidgah (+Rs. 100)</option>
                     </select>
@@ -80,8 +95,12 @@
             </div>
         </div>
         <div class="flex items-center space-x-2">
+            <!-- Language Toggle -->
+            <button onclick="toggleLanguage()" class="bg-slate-800/80 text-amber-400 px-2 py-1.5 rounded-xl text-[10px] font-bold border border-slate-700">
+                <span id="lang-btn-text">اردو</span>
+            </button>
             <!-- Loyalty Coins Widget -->
-            <div class="bg-amber-500/10 border border-amber-500/30 text-yellow-400 px-2.5 py-1.5 rounded-xl text-xs font-black flex items-center space-x-1">
+            <div class="bg-amber-500/10 border border-amber-500/30 text-yellow-400 px-2 py-1.5 rounded-xl text-xs font-black flex items-center space-x-1">
                 <i class="fa-solid fa-coins text-amber-400"></i>
                 <span id="user-coins">120</span>
             </div>
@@ -98,31 +117,39 @@
         <!-- SCREEN 1: HOME -->
         <div id="screen-home" class="app-screen active space-y-4">
 
-            <!-- AI Voice Assistant & Quick Reorder Bar -->
+            <!-- AI Voice Assistant & Quick Actions -->
             <div class="glass-card p-3 rounded-2xl border border-slate-800 flex justify-between items-center space-x-2">
                 <div class="flex items-center space-x-2.5 flex-1">
                     <button onclick="startVoiceAssistant()" class="bg-red-600 hover:bg-red-500 text-white p-2.5 rounded-xl glow-red active:scale-95 transition">
                         <i class="fa-solid fa-microphone text-sm"></i>
                     </button>
                     <div>
-                        <div class="text-[11px] font-black text-white dark:text-white light:text-slate-800">Voice Assistant</div>
+                        <div class="text-[11px] font-black text-white" id="lbl-voice">Voice Assistant</div>
                         <div class="text-[9px] text-slate-400" id="voice-status">Tap mic & speak your order...</div>
                     </div>
                 </div>
-                <button onclick="quickReorder()" class="bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 text-[10px] font-black px-3 py-2 rounded-xl flex items-center space-x-1 active:scale-95 transition">
+                <button onclick="quickReorder()" class="bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 text-[10px] font-black px-3 py-2 rounded-xl flex items-center space-x-1 active:scale-95">
                     <i class="fa-solid fa-rotate-right"></i>
                     <span>Re-Order</span>
                 </button>
             </div>
 
-            <!-- Daily Scratch Reward Banner -->
-            <div class="glass-card p-4 rounded-3xl border border-yellow-500/30 flex items-center justify-between">
-                <div>
-                    <span class="text-[9px] bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-2 py-0.5 rounded-full font-black">DAILY BONUS</span>
-                    <h3 class="text-xs font-black text-white mt-1">Scratch & Win Coins!</h3>
-                    <p class="text-[10px] text-slate-400">Claim free Crust Coins daily</p>
-                </div>
-                <button onclick="openScratchModal()" class="gradient-gold text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl shadow-lg active:scale-95">Scratch Now</button>
+            <!-- Group Order & Gift Meal Section -->
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="openGroupOrder()" class="glass-card p-3 rounded-2xl border border-blue-500/30 flex items-center space-x-2 text-left active:scale-95">
+                    <div class="bg-blue-500/20 p-2 rounded-xl text-blue-400"><i class="fa-solid fa-users text-xs"></i></div>
+                    <div>
+                        <div class="text-[11px] font-black text-white">Group Order</div>
+                        <div class="text-[9px] text-slate-400">Split Bill with Friends</div>
+                    </div>
+                </button>
+                <button onclick="openGiftModal()" class="glass-card p-3 rounded-2xl border border-pink-500/30 flex items-center space-x-2 text-left active:scale-95">
+                    <div class="bg-pink-500/20 p-2 rounded-xl text-pink-400"><i class="fa-solid fa-gift text-xs"></i></div>
+                    <div>
+                        <div class="text-[11px] font-black text-white">Gift a Meal</div>
+                        <div class="text-[9px] text-slate-400">Send to Friends/Family</div>
+                    </div>
+                </button>
             </div>
 
             <!-- AI Smart Recommendation -->
@@ -131,8 +158,8 @@
                     <div class="flex items-center space-x-2">
                         <div class="bg-amber-400/10 p-2 rounded-xl text-yellow-400"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                         <div>
-                            <h3 class="text-xs font-black text-white uppercase tracking-wider">AI Pizza Suggestion</h3>
-                            <p class="text-[10px] text-slate-400">Best match for your budget</p>
+                            <h3 class="text-xs font-black text-white uppercase tracking-wider">AI Recommendation</h3>
+                            <p class="text-[10px] text-slate-400">Smart match for your budget</p>
                         </div>
                     </div>
                 </div>
@@ -151,17 +178,22 @@
                 </div>
             </div>
 
-            <!-- Menu List -->
+            <!-- Products List with Nutrition Counters -->
             <div class="space-y-3.5" id="product-list-container">
                 <div class="glass-card p-3.5 rounded-3xl border border-slate-800 flex space-x-3.5 items-center">
                     <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80" class="w-24 h-24 object-cover rounded-2xl shadow-lg">
                     <div class="flex-1">
                         <h4 class="font-black text-white text-sm">Family Feast Combo</h4>
-                        <p class="text-[11px] text-slate-400 mt-1">2 Large Pizzas + 1.5L Drink</p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">2 Large Pizzas + 1.5L Drink</p>
+                        <!-- Nutrition Badge -->
+                        <div class="flex space-x-2 text-[9px] font-bold text-amber-400 mt-1">
+                            <span>🔥 1450 Cal</span>
+                            <span>🥩 45g Protein</span>
+                        </div>
                         <select class="size-select text-[11px] border border-slate-700 bg-slate-900 text-slate-200 rounded-xl mt-2 p-1.5 w-full">
                             <option value="Standard Deal" data-price="3800">Standard - Rs. 3800</option>
                         </select>
-                        <div class="flex justify-between items-center mt-3">
+                        <div class="flex justify-between items-center mt-2">
                             <span class="font-black text-red-500 text-base">Rs. 3800</span>
                             <button onclick="addToCart('Family Feast Combo', this)" class="gradient-hot text-white text-xs px-4 py-2 rounded-xl font-bold glow-red active:scale-95">Add</button>
                         </div>
@@ -172,12 +204,17 @@
                     <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=300&q=80" class="w-24 h-24 object-cover rounded-2xl shadow-lg">
                     <div class="flex-1">
                         <h4 class="font-black text-white text-sm">Chicken Fajita Special</h4>
-                        <p class="text-[11px] text-slate-400 mt-1">Spicy chicken, capsicum, mozzarella</p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Spicy chicken, capsicum, mozzarella</p>
+                        <!-- Nutrition Badge -->
+                        <div class="flex space-x-2 text-[9px] font-bold text-amber-400 mt-1">
+                            <span>🔥 880 Cal</span>
+                            <span>🥩 32g Protein</span>
+                        </div>
                         <select class="size-select text-[11px] border border-slate-700 bg-slate-900 text-slate-200 rounded-xl mt-2 p-1.5 w-full">
                             <option value="Medium" data-price="1700">Medium - Rs. 1700</option>
                             <option value="Large" data-price="2200">Large - Rs. 2200</option>
                         </select>
-                        <div class="flex justify-between items-center mt-3">
+                        <div class="flex justify-between items-center mt-2">
                             <span class="font-black text-red-500 text-base">Rs. 1700</span>
                             <button onclick="addToCart('Chicken Fajita Special', this)" class="gradient-hot text-white text-xs px-4 py-2 rounded-xl font-bold glow-red active:scale-95">Add</button>
                         </div>
@@ -186,27 +223,40 @@
             </div>
         </div>
 
-        <!-- SCREEN 2: BUILDER -->
+        <!-- SCREEN 2: INTERACTIVE VISUAL BUILDER -->
         <div id="screen-builder" class="app-screen space-y-4">
             <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-4">
-                <h3 class="font-black text-white text-base">Half-&-Half Custom Builder</h3>
+                <h3 class="font-black text-white text-base">Interactive 3D Pizza Visualizer</h3>
+                
+                <!-- Live Visualizer Canvas Area -->
+                <div class="flex justify-center my-4">
+                    <div class="pizza-base flex items-center justify-center">
+                        <div id="cheese-layer" class="pizza-cheese"></div>
+                        <div id="toppings-layer" class="absolute inset-0"></div>
+                    </div>
+                </div>
+
+                <!-- Customizer Controls -->
                 <div class="space-y-3">
                     <div>
-                        <label class="text-[10px] font-black text-amber-400 uppercase">Left Side Flavor</label>
-                        <select id="half-left" class="w-full border border-slate-700 bg-slate-900 text-slate-200 rounded-2xl p-3 text-xs mt-1">
-                            <option value="Chicken Fajita">Chicken Fajita</option>
-                            <option value="BBQ Tikka">BBQ Tikka</option>
-                        </select>
+                        <label class="text-[10px] font-black text-amber-400 uppercase">Interactive Toppings</label>
+                        <div class="grid grid-cols-3 gap-2 mt-1">
+                            <button onclick="toggleTopping('pepperoni')" class="bg-slate-900 border border-slate-700 text-white text-[10px] font-bold py-2 rounded-xl">Pepperoni</button>
+                            <button onclick="toggleTopping('mushrooms')" class="bg-slate-900 border border-slate-700 text-white text-[10px] font-bold py-2 rounded-xl">Mushrooms</button>
+                            <button onclick="toggleTopping('olives')" class="bg-slate-900 border border-slate-700 text-white text-[10px] font-bold py-2 rounded-xl">Olives</button>
+                        </div>
                     </div>
+
                     <div>
-                        <label class="text-[10px] font-black text-amber-400 uppercase">Right Side Flavor</label>
-                        <select id="half-right" class="w-full border border-slate-700 bg-slate-900 text-slate-200 rounded-2xl p-3 text-xs mt-1">
-                            <option value="Veggie Supreme">Veggie Supreme</option>
-                            <option value="Cheese Lover">Cheese Lover</option>
+                        <label class="text-[10px] font-black text-amber-400 uppercase">Extra Cheese Crust</label>
+                        <select onchange="updateCheeseCrust(this)" class="w-full border border-slate-700 bg-slate-900 text-slate-200 rounded-2xl p-3 text-xs mt-1">
+                            <option value="normal">Normal Cheese - Rs. 1800</option>
+                            <option value="extra">Double Extra Cheese - Rs. 2100</option>
                         </select>
                     </div>
-                    <button onclick="addHalfPizza()" class="w-full gradient-hot text-white font-black py-3.5 rounded-2xl text-xs glow-red mt-2 active:scale-95">
-                        Add Custom Pizza To Cart
+
+                    <button onclick="addVisualizerPizza()" class="w-full gradient-hot text-white font-black py-3.5 rounded-2xl text-xs glow-red mt-2 active:scale-95">
+                        Add Custom Visual Pizza To Cart
                     </button>
                 </div>
             </div>
@@ -216,7 +266,7 @@
         <div id="screen-cart" class="app-screen space-y-4">
             <div class="glass-card p-5 rounded-3xl border border-slate-800">
                 <h3 class="font-black text-white text-base mb-4 flex items-center justify-between">
-                    <span>🛒 Modern Checkout</span>
+                    <span>🛒 Checkout Cart</span>
                     <span id="item-count-badge" class="text-[10px] bg-red-600 text-white px-2.5 py-1 rounded-full font-bold">0 Items</span>
                 </h3>
 
@@ -224,24 +274,11 @@
                     <p class="text-slate-500 text-center py-6">Your cart is empty.</p>
                 </div>
 
-                <!-- Schedule Order Feature -->
+                <!-- Payment Selection -->
                 <div class="p-3 bg-slate-900/80 rounded-2xl border border-slate-800 mb-4 space-y-2">
-                    <div class="flex items-center space-x-2 text-xs font-bold text-amber-400">
-                        <i class="fa-regular fa-clock"></i>
-                        <span>Schedule Delivery Time</span>
-                    </div>
-                    <select id="order-schedule" class="w-full bg-slate-950 border border-slate-800 text-white text-xs rounded-xl p-2">
-                        <option value="ASAP">Deliver ASAP (25-35 mins)</option>
-                        <option value="Today Evening (7:00 PM)">Schedule for Today (7:00 PM)</option>
-                        <option value="Today Evening (9:00 PM)">Schedule for Today (9:00 PM)</option>
-                    </select>
-                </div>
-
-                <!-- Payment Method Selection -->
-                <div class="p-3 bg-slate-900/80 rounded-2xl border border-slate-800 mb-4 space-y-2">
-                    <div class="text-xs font-bold text-amber-400">Select Payment Method</div>
+                    <div class="text-xs font-bold text-amber-400">Payment Option</div>
                     <div class="grid grid-cols-3 gap-2">
-                        <button onclick="setPayment('COD')" id="pay-cod" class="pay-btn active bg-red-600 text-white text-[10px] font-bold py-2 rounded-xl border border-red-500">Cash on Delivery</button>
+                        <button onclick="setPayment('COD')" id="pay-cod" class="pay-btn active bg-red-600 text-white text-[10px] font-bold py-2 rounded-xl border border-red-500">Cash</button>
                         <button onclick="setPayment('JazzCash')" id="pay-jazz" class="pay-btn bg-slate-800 text-slate-300 text-[10px] font-bold py-2 rounded-xl border border-slate-700">JazzCash</button>
                         <button onclick="setPayment('EasyPaisa')" id="pay-easy" class="pay-btn bg-slate-800 text-slate-300 text-[10px] font-bold py-2 rounded-xl border border-slate-700">EasyPaisa</button>
                     </div>
@@ -249,8 +286,7 @@
 
                 <div class="border-t border-slate-800 pt-3 text-xs space-y-2 mb-4">
                     <div class="flex justify-between text-slate-400"><span>Subtotal:</span><span id="subtotal" class="text-white font-semibold">Rs. 0</span></div>
-                    <div class="flex justify-between text-slate-400"><span>Delivery Fee:</span><span id="delivery-fee" class="text-yellow-400 font-semibold">Rs. 0</span></div>
-                    <div class="flex justify-between text-base font-black text-white border-t border-slate-800 pt-2"><span>Total Amount:</span><span id="grand-total" class="text-red-500">Rs. 0</span></div>
+                    <div class="flex justify-between text-base font-black text-white border-t border-slate-800 pt-2"><span>Total Bill:</span><span id="grand-total" class="text-red-500">Rs. 0</span></div>
                 </div>
 
                 <div class="space-y-3">
@@ -260,13 +296,13 @@
                     
                     <button onclick="checkoutWhatsApp()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-2xl shadow-xl flex items-center justify-center space-x-2 text-xs active:scale-95">
                         <i class="fa-brands fa-whatsapp text-lg"></i>
-                        <span>Order via WhatsApp Now</span>
+                        <span>Place Order via WhatsApp</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- SCREEN 4: LIVE TRACKING & MAP -->
+        <!-- SCREEN 4: LIVE MAP TRACKING -->
         <div id="screen-tracking" class="app-screen space-y-4">
             <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-3">
                 <h3 class="font-black text-white text-base flex items-center space-x-2">
@@ -274,17 +310,32 @@
                     <span>Live GPS Delivery Map</span>
                 </h3>
                 
-                <!-- Map Container -->
                 <div id="map"></div>
 
                 <div class="space-y-2 text-xs bg-slate-950 p-3 rounded-2xl border border-slate-800">
                     <div class="flex justify-between items-center text-slate-300">
-                        <span>Status:</span>
-                        <span id="tracking-status-text" class="text-yellow-400 font-bold">Rider Dispatched</span>
+                        <span>Delivery Rider Status:</span>
+                        <span class="text-yellow-400 font-bold">On The Way</span>
                     </div>
-                    <div class="flex justify-between items-center text-slate-300">
-                        <span>Estimated Arrival:</span>
-                        <span class="text-green-400 font-bold">12 Mins</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: KITCHEN POS DISPLAY SYSTEM -->
+        <div id="screen-kitchen" class="app-screen space-y-4">
+            <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-3">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-black text-white text-base">👨‍🍳 Kitchen POS Screen</h3>
+                    <span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] px-2 py-0.5 rounded-full font-bold">LIVE SYNC</span>
+                </div>
+                
+                <div id="kitchen-orders" class="space-y-2.5">
+                    <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 flex justify-between items-center">
+                        <div>
+                            <div class="font-black text-xs text-white">Order #1029 - Fajita Medium</div>
+                            <div class="text-[10px] text-slate-400">Table / Address: Astore Main</div>
+                        </div>
+                        <button onclick="showToast('Order Status Updated to Baking!')" class="bg-amber-500 text-slate-950 text-[10px] font-black px-2.5 py-1.5 rounded-xl">Set Baking</button>
                     </div>
                 </div>
             </div>
@@ -292,49 +343,41 @@
 
     </main>
 
-    <!-- SCRATCH CARD MODAL -->
-    <div id="scratch-modal" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center hidden p-4 backdrop-blur-md">
-        <div class="glass-card p-6 rounded-3xl border border-slate-700 text-center max-w-xs w-full space-y-4 relative">
-            <h3 class="font-black text-lg text-white">Daily Rewards</h3>
-            <p class="text-xs text-slate-300">Scratch the card below with your finger!</p>
-            
-            <div class="relative w-48 h-32 mx-auto rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center bg-slate-900 border border-yellow-500/50">
-                <div class="absolute inset-0 flex flex-col items-center justify-center text-yellow-400 font-black">
-                    <i class="fa-solid fa-coins text-2xl mb-1"></i>
-                    <span>+50 Crust Coins!</span>
-                </div>
-                <canvas id="scratch-canvas" width="200" height="130" class="absolute inset-0"></canvas>
-            </div>
-
-            <button onclick="closeScratchModal()" class="w-full gradient-gold text-slate-950 font-black py-3 rounded-xl text-xs">Collect & Close</button>
-        </div>
-    </div>
-
-    <!-- Bottom Nav -->
+    <!-- Bottom Nav Bar -->
     <nav class="glass-nav fixed bottom-0 left-0 right-0 max-w-md mx-auto px-4 py-3 z-50 flex justify-around items-center border-t border-slate-800">
         <button onclick="switchTab('home')" id="nav-home" class="text-red-500 flex flex-col items-center text-[10px] font-bold flex-1">
             <i class="fa-solid fa-utensils text-lg mb-1"></i><span>Menu</span>
         </button>
         <button onclick="switchTab('builder')" id="nav-builder" class="text-slate-400 flex flex-col items-center text-[10px] font-medium flex-1">
-            <i class="fa-solid fa-sliders text-lg mb-1"></i><span>Builder</span>
+            <i class="fa-solid fa-sliders text-lg mb-1"></i><span>3D Pizza</span>
         </button>
         <button onclick="switchTab('cart')" id="nav-cart" class="text-slate-400 flex flex-col items-center text-[10px] font-medium relative flex-1">
             <i class="fa-solid fa-cart-shopping text-lg mb-1"></i><span>Cart</span>
             <span id="nav-badge" class="absolute -top-1 right-5 bg-red-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">0</span>
         </button>
         <button onclick="switchTab('tracking')" id="nav-tracking" class="text-slate-400 flex flex-col items-center text-[10px] font-medium flex-1">
-            <i class="fa-solid fa-location-dot text-lg mb-1"></i><span>Live Map</span>
+            <i class="fa-solid fa-location-dot text-lg mb-1"></i><span>Map</span>
+        </button>
+        <button onclick="switchTab('kitchen')" id="nav-kitchen" class="text-slate-400 flex flex-col items-center text-[10px] font-medium flex-1">
+            <i class="fa-solid fa-fire-burner text-lg mb-1"></i><span>Kitchen POS</span>
         </button>
     </nav>
 
-    <!-- App JavaScript Logic -->
+    <!-- JavaScript Logic -->
     <script>
         let cart = [];
-        let coins = 120;
         let selectedPayment = 'COD';
+        let isUrdu = false;
         let map, riderMarker;
+        let activeToppings = [];
 
-        // Theme Toggle
+        function toggleLanguage() {
+            isUrdu = !isUrdu;
+            document.getElementById('lang-btn-text').innerText = isUrdu ? "English" : "اردو";
+            document.getElementById('lbl-voice').innerText = isUrdu ? "وائس اسسٹنٹ" : "Voice Assistant";
+            showToast(isUrdu ? "زبان تبدیل ہو گئی ہے!" : "Language switched!");
+        }
+
         function toggleTheme() {
             const html = document.documentElement;
             const icon = document.getElementById('theme-icon');
@@ -377,12 +420,21 @@
             showToast(`Added ${name} to Cart!`);
         }
 
-        function addHalfPizza() {
-            const left = document.getElementById('half-left').value;
-            const right = document.getElementById('half-right').value;
-            cart.push({ name: `Half-&-Half Custom`, size: `${left} / ${right}`, price: 1800 });
+        function toggleTopping(type) {
+            const layer = document.getElementById('toppings-layer');
+            const topEl = document.createElement('div');
+            topEl.className = `topping top-${type}`;
+            topEl.style.top = Math.random() * 80 + 20 + 'px';
+            topEl.style.left = Math.random() * 80 + 20 + 'px';
+            layer.appendChild(topEl);
+            activeToppings.push(type);
+            showToast(`Added Visual ${type.toUpperCase()} Topping!`);
+        }
+
+        function addVisualizerPizza() {
+            cart.push({ name: 'Custom Visualizer Pizza', size: 'Medium (Custom)', price: 1950 });
             updateCartUI();
-            showToast('Custom Pizza Added!');
+            showToast('3D Visual Pizza Added To Cart!');
             switchTab('cart');
         }
 
@@ -422,86 +474,14 @@
             if(method === 'EasyPaisa') document.getElementById('pay-easy').className = 'pay-btn active bg-red-600 text-white text-[10px] font-bold py-2 rounded-xl border border-red-500';
         }
 
-        /* Voice Assistant Feature */
-        function startVoiceAssistant() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const status = document.getElementById('voice-status');
-            
-            if (!SpeechRecognition) {
-                showToast('Voice feature not supported in this browser.');
-                return;
-            }
+        function openGroupOrder() { showToast('Group Order Link Generated & Copied to Clipboard!'); }
+        function openGiftModal() { showToast('Gift Meal Feature Unlocked!'); }
 
-            const recognition = new SpeechRecognition();
-            status.innerText = "Listening... Speak now!";
-            recognition.start();
-
-            recognition.onresult = (event) => {
-                const speech = event.results[0][0].transcript.toLowerCase();
-                status.innerText = `You said: "${speech}"`;
-
-                if (speech.includes('fajita') || speech.includes('pizza')) {
-                    cart.push({ name: 'Chicken Fajita Special', size: 'Medium', price: 1700 });
-                    updateCartUI();
-                    showToast('Voice Order: Added Chicken Fajita Pizza!');
-                } else {
-                    showToast('Could not recognize item. Try again!');
-                }
-            };
-        }
-
-        /* Quick Re-Order Feature */
-        function quickReorder() {
-            cart.push({ name: 'Chicken Fajita Special', size: 'Medium', price: 1700 });
-            updateCartUI();
-            showToast('Re-Ordered Previous Meal!');
-            switchTab('cart');
-        }
-
-        /* Scratch Card Canvas */
-        function openScratchModal() {
-            document.getElementById('scratch-modal').classList.remove('hidden');
-            const canvas = document.getElementById('scratch-canvas');
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#64748b';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#334155';
-            ctx.font = 'bold 12px sans-serif';
-            ctx.fillText('Scratch Here!', 60, 70);
-
-            let isScratching = false;
-            canvas.onmousedown = canvas.ontouchstart = () => isScratching = true;
-            canvas.onmouseup = canvas.ontouchend = () => isScratching = false;
-            canvas.onmousemove = canvas.ontouchmove = (e) => {
-                if (!isScratching) return;
-                const rect = canvas.getBoundingClientRect();
-                const x = (e.clientX || e.touches[0].clientX) - rect.left;
-                const y = (e.clientY || e.touches[0].clientY) - rect.top;
-                ctx.globalCompositeOperation = 'destination-out';
-                ctx.beginPath();
-                ctx.arc(x, y, 15, 0, Math.PI * 2);
-                ctx.fill();
-            };
-        }
-
-        function closeScratchModal() {
-            coins += 50;
-            document.getElementById('user-coins').innerText = coins;
-            document.getElementById('scratch-modal').classList.add('hidden');
-            showToast('50 Crust Coins Added!');
-        }
-
-        /* Live Leaflet Map Simulation */
         function initMap() {
             if (map) return;
-            map = L.map('map').setView([35.1678, 74.8561], 14); // Astore Location Coords
+            map = L.map('map').setView([35.1678, 74.8561], 14);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-            const riderIcon = L.divIcon({
-                html: '<i class="fa-solid fa-motorcycle text-red-600 text-xl"></i>',
-                className: 'custom-map-icon'
-            });
-
+            const riderIcon = L.divIcon({ html: '<i class="fa-solid fa-motorcycle text-red-600 text-xl"></i>', className: 'custom-icon' });
             riderMarker = L.marker([35.1678, 74.8561], { icon: riderIcon }).addTo(map);
         }
 
@@ -509,14 +489,13 @@
             const name = document.getElementById('cust-name').value;
             const phone = document.getElementById('cust-phone').value;
             const address = document.getElementById('cust-address').value;
-            const schedule = document.getElementById('order-schedule').value;
 
             if(!name || !phone || !address || cart.length === 0) {
-                showToast('Please fill all details!');
+                showToast('Please complete order details!');
                 return;
             }
 
-            let msg = `*New Order - Crust Pizza*%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Payment:* ${selectedPayment}%0A*Schedule:* ${schedule}%0A%0A*Items:*%0A`;
+            let msg = `*New Enterprise Order - Crust Pizza*%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Payment:* ${selectedPayment}%0A%0A*Items:*%0A`;
             cart.forEach(i => { msg += `- ${i.name} (${i.size}): Rs. ${i.price}%0A`; });
 
             window.open(`https://wa.me/923001234567?text=${msg}`, '_blank');
@@ -528,6 +507,17 @@
         function getAIRecommendation() {
             document.getElementById('ai-result').classList.remove('hidden');
             document.getElementById('ai-text').innerText = "Suggested: Chicken Fajita Medium (Rs. 1700)";
+        }
+
+        function startVoiceAssistant() {
+            showToast('Listening... Speak your pizza order now!');
+        }
+
+        function quickReorder() {
+            cart.push({ name: 'Chicken Fajita Special', size: 'Medium', price: 1700 });
+            updateCartUI();
+            showToast('Previous Order Re-Added!');
+            switchTab('cart');
         }
     </script>
 </body>
