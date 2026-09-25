@@ -2,664 +2,423 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiny Paws Yorkies | Elegant Yorkshire Terriers</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
+    <title>Crust Pizza - Ultimate Online Ordering & Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #c59b27;
-            --primary-dark: #a37c1d;
-            --secondary: #2c221e;
-            --light: #fdfbf7;
-            --accent: #f4ece1;
-            --text-dark: #333333;
-            --text-light: #777777;
-            --white: #ffffff;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--light);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-
-        h1, h2, h3, h4 {
-            font-family: 'Playfair Display', serif;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header & Navigation */
-        header {
-            background-color: var(--white);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 80px;
-        }
-
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--secondary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo span {
-            color: var(--primary);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            font-weight: 500;
-            color: var(--text-dark);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .btn {
-            background-color: var(--primary);
-            color: var(--white);
-            padding: 10px 25px;
-            border-radius: 30px;
-            font-weight: 500;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .hamburger {
-            display: none;
-            cursor: pointer;
-            font-size: 24px;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 160px 0 100px;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--light) 100%);
-            min-height: 90vh;
-            display: flex;
-            align-items: center;
-        }
-
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-
-        .hero-content h1 {
-            font-size: 48px;
-            color: var(--secondary);
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .hero-content h1 span {
-            color: var(--primary);
-        }
-
-        .hero-content p {
-            color: var(--text-light);
-            font-size: 16px;
-            margin-bottom: 30px;
-        }
-
-        .hero-btns {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            padding: 10px 25px;
-            border-radius: 30px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-
-        .hero-image img {
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-            object-fit: cover;
-            height: 450px;
-        }
-
-        /* About Section */
-        .section-padding {
-            padding: 100px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-title h2 {
-            font-size: 36px;
-            color: var(--secondary);
-            margin-bottom: 15px;
-        }
-
-        .section-title p {
-            color: var(--text-light);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .about-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-        }
-
-        .about-card {
-            background: var(--white);
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .about-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-        }
-
-        .about-card i {
-            font-size: 40px;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .about-card h3 {
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: var(--secondary);
-        }
-
-        .about-card p {
-            color: var(--text-light);
-            font-size: 14px;
-        }
-
-        /* Gallery / Puppies Showcase */
-        .gallery-section {
-            background-color: var(--accent);
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-        }
-
-        .gallery-item {
-            background: var(--white);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: var(--transition);
-        }
-
-        .gallery-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .gallery-img {
-            height: 250px;
-            width: 100%;
-            object-fit: cover;
-        }
-
-        .gallery-info {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .gallery-info h3 {
-            font-size: 18px;
-            color: var(--secondary);
-            margin-bottom: 5px;
-        }
-
-        .gallery-info p {
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        /* Care & Grooming Tips */
-        .tips-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .tips-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .tip-item {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .tip-icon {
-            background-color: var(--accent);
-            color: var(--primary);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 20px;
-        }
-
-        .tip-text h3 {
-            font-size: 18px;
-            color: var(--secondary);
-            margin-bottom: 5px;
-        }
-
-        .tip-text p {
-            color: var(--text-light);
-            font-size: 14px;
-        }
-
-        .tips-image img {
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
-
-        /* Contact Section */
-        .contact-section {
-            background: linear-gradient(135deg, var(--secondary) 0%, #1a1412 100%);
-            color: var(--white);
-        }
-
-        .contact-section .section-title h2 {
-            color: var(--white);
-        }
-
-        .contact-section .section-title p {
-            color: #b0b0b0;
-        }
-
-        .contact-form {
-            max-width: 700px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            color: var(--white);
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .form-control::placeholder {
-            color: #b0b0b0;
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            height: 130px;
-        }
-
-        .contact-form .btn {
-            width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #1a1412;
-            color: #b0b0b0;
-            padding: 40px 0;
-            text-align: center;
-            font-size: 14px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        footer p span {
-            color: var(--primary);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .hero-grid, .tips-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .hero-btns {
-                justify-content: center;
-            }
-
-            .about-grid, .gallery-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .tip-item {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 80px;
-                left: 0;
-                width: 100%;
-                background: var(--white);
-                padding: 20px 0;
-                box-shadow: 0 10px 15px rgba(0,0,0,0.05);
-                text-align: center;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .hamburger {
-                display: block;
-            }
-
-            .about-grid, .gallery-grid, .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-content h1 {
-                font-size: 36px;
-            }
-        }
-    </style>
 </head>
-<body>
+<body class="bg-gray-50 font-sans">
 
-    <!-- Header -->
-    <header>
-        <div class="container nav-container">
-            <a href="#" class="logo"><i class="fa-solid fa-dog"></i>Tiny Paws <span>Yorkies</span></a>
-            <nav>
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#puppies">Available Puppies</a></li>
-                    <li><a href="#care">Care Guide</a></li>
-                    <li><a href="#contact" class="btn">Inquire Now</a></li>
-                </ul>
+    <!-- Header / Navbar -->
+    <header class="bg-red-600 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-pizza-slice text-3xl"></i>
+                <span class="text-2xl font-extrabold tracking-wider" id="brand-title">CRUST PIZZA</span>
+            </div>
+            <nav class="hidden md:flex space-x-6 font-medium items-center">
+                <a href="#menu" class="hover:text-yellow-300 transition">Menu</a>
+                <a href="#builder" class="hover:text-yellow-300 transition">Build Pizza</a>
+                <a href="#reservation" class="hover:text-yellow-300 transition">Book Table</a>
+                <a href="#tracking" class="hover:text-yellow-300 transition">Track Order</a>
+                <a href="#admin" class="hover:text-yellow-300 transition bg-red-700 px-3 py-1 rounded">Admin Panel</a>
+                <!-- Language Switcher -->
+                <button onclick="toggleLanguage()" class="bg-yellow-400 text-gray-900 px-2.5 py-1 rounded text-xs font-bold hover:bg-yellow-300 transition">Urdu / Eng</button>
             </nav>
-            <div class="hamburger" id="hamburger">
-                <i class="fa-solid fa-bars"></i>
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleCart()" class="relative bg-white text-red-600 px-4 py-2 rounded-full font-bold shadow flex items-center space-x-2 hover:bg-yellow-100 transition">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>Cart</span>
+                    <span id="cart-count" class="bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">0</span>
+                </button>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container hero-grid">
-            <div class="hero-content">
-                <h1>Big Personality in a <span>Tiny Package</span></h1>
-                <p>Welcome to Tiny Paws Yorkies! We raise healthy, affectionate, and champion-line Yorkshire Terriers with love, care, and proper socialization.</p>
-                <div class="hero-btns">
-                    <a href="#puppies" class="btn">View Puppies</a>
-                    <a href="#contact" class="btn-outline">Contact Us</a>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80" alt="Cute Yorkshire Terrier">
-            </div>
+    <section class="bg-gradient-to-r from-red-700 to-red-500 text-white py-16 px-4 text-center">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4" id="hero-heading">Hot & Delicious Pizzas Delivered in Astore!</h1>
+            <p class="text-lg mb-8 text-yellow-100" id="hero-sub">Order online instantly with live tracking, custom pizzas, and table reservations.</p>
+            <a href="#menu" class="bg-yellow-400 text-gray-900 font-bold px-8 py-3 rounded-full text-lg shadow-lg hover:bg-yellow-300 transition">Explore Menu</a>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section class="section-padding" id="about">
-        <div class="container">
-            <div class="section-title">
-                <h2>Why Choose Our Yorkies?</h2>
-                <p>Yorkshire Terriers are renowned for their glamorous silky coats, fearless loyalty, and vibrant, loving spirits.</p>
-            </div>
-            <div class="about-grid">
-                <div class="about-card">
-                    <i class="fa-solid fa-heart-pulse"></i>
-                    <h3>Health Guaranteed</h3>
-                    <p>All our puppies undergo strict veterinary health checks, vaccinations, and deworming before joining their new families.</p>
-                </div>
-                <div class="about-card">
-                    <i class="fa-solid fa-house-chimney-user"></i>
-                    <h3>Home Raised</h3>
-                    <p>Raised in a loving home environment alongside humans to ensure they are exceptionally friendly and well-socialized.</p>
-                </div>
-                <div class="about-card">
-                    <i class="fa-solid fa-certificate"></i>
-                    <h3>Purebred Bloodlines</h3>
-                    <p>Carefully selected champion bloodlines ensuring ideal temperament, gorgeous coats, and classic breed conformation.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery / Puppies Showcase -->
-    <section class="section-padding gallery-section" id="puppies">
-        <div class="container">
-            <div class="section-title">
-                <h2>Meet Our Available Puppies</h2>
-                <p>Explore our adorable litters looking for their forever loving homes.</p>
-            </div>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?auto=format&fit=crop&w=600&q=80" alt="Yorkie Puppy" class="gallery-img">
-                    <div class="gallery-info">
-                        <h3>Bella (Female)</h3>
-                        <p>10 Weeks Old • Ready</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=600&q=80" alt="Yorkie Puppy" class="gallery-img">
-                    <div class="gallery-info">
-                        <h3>Milo (Male)</h3>
-                        <p>12 Weeks Old • Champion Line</p>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80" alt="Yorkie Puppy" class="gallery-img">
-                    <div class="gallery-info">
-                        <h3>Sophie (Female)</h3>
-                        <p>11 Weeks Old • Playful</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Care Guide Section -->
-    <section class="section-padding" id="care">
-        <div class="container">
-            <div class="tips-grid">
-                <div class="tips-list">
-                    <div class="section-title" style="text-align: left; margin-bottom: 30px;">
-                        <h2>Yorkie Care & Grooming Tips</h2>
-                        <p style="margin: 0;">Keeping your Yorkshire Terrier healthy, clean, and happy requires proper daily attention.</p>
-                    </div>
-                    <div class="tip-item">
-                        <div class="tip-icon"><i class="fa-solid fa-scissors"></i></div>
-                        <div class="tip-text">
-                            <h3>Coat Maintenance</h3>
-                            <p>Their silky hair needs regular brushing daily to prevent tangles and keep their signature look shining.</p>
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Menu & Customizer Section -->
+        <div class="lg:col-span-2 space-y-12">
+            
+            <!-- Standard Menu -->
+            <div id="menu">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">Our Special Menu</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Product 1 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80" alt="Fajita Pizza" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-bold text-xl text-gray-800">Chicken Fajita Pizza</h3>
+                                <p class="text-gray-500 text-sm mt-1">Spicy chicken, onions, capsicum, and mozzarella cheese.</p>
+                                <div class="mt-4 space-y-2">
+                                    <label class="text-xs font-bold text-gray-600 uppercase">Select Size:</label>
+                                    <select class="size-select w-full border rounded p-1.5 text-sm bg-gray-50">
+                                        <option value="Small" data-price="1200">Small (10") - Rs. 1200</option>
+                                        <option value="Medium" data-price="1700" selected>Medium (13") - Rs. 1700</option>
+                                        <option value="Large" data-price="2200">Large (16") - Rs. 2200</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-gray-50 border-t flex justify-between items-center">
+                            <span class="text-xl font-extrabold text-red-600 item-price">Rs. 1700</span>
+                            <button onclick="addToCart('Chicken Fajita Pizza', this)" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Add to Cart</button>
                         </div>
                     </div>
-                    <div class="tip-item">
-                        <div class="tip-icon"><i class="fa-solid fa-bone"></i></div>
-                        <div class="tip-text">
-                            <h3>Balanced Nutrition</h3>
-                            <p>Feed high-quality small-breed formula food formulated for high energy and sensitive digestive systems.</p>
+
+                    <!-- Product 2 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=500&q=80" alt="Super Supreme" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-bold text-xl text-gray-800">Super Supreme Pizza</h3>
+                                <p class="text-gray-500 text-sm mt-1">Smoked beef, pepperoni, mushrooms, olives & cheese.</p>
+                                <div class="mt-4 space-y-2">
+                                    <label class="text-xs font-bold text-gray-600 uppercase">Select Size:</label>
+                                    <select class="size-select w-full border rounded p-1.5 text-sm bg-gray-50">
+                                        <option value="Small" data-price="1350">Small (10") - Rs. 1350</option>
+                                        <option value="Medium" data-price="1850" selected>Medium (13") - Rs. 1850</option>
+                                        <option value="Large" data-price="2400">Large (16") - Rs. 2400</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="tip-item">
-                        <div class="tip-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-                        <div class="tip-text">
-                            <h3>Early Socialization</h3>
-                            <p>Gentle obedience training and positive reinforcement help build a confident and well-behaved companion.</p>
+                        <div class="p-4 bg-gray-50 border-t flex justify-between items-center">
+                            <span class="text-xl font-extrabold text-red-600 item-price">Rs. 1850</span>
+                            <button onclick="addToCart('Super Supreme Pizza', this)" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Add to Cart</button>
                         </div>
                     </div>
                 </div>
-                <div class="tips-image">
-                    <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80" alt="Groomed Yorkie">
+            </div>
+
+            <!-- Pizza Builder / Customizer Section -->
+            <div id="builder" class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-red-600"></i>
+                    <span>Custom Pizza Builder</span>
+                </h2>
+                <p class="text-gray-500 text-sm mb-4">Design your own personalized pizza step by step!</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-600 uppercase">Base Dough:</label>
+                        <select id="build-dough" class="w-full border rounded p-2 text-sm mt-1 bg-gray-50">
+                            <option value="Regular Crust (Rs. 1000)">Regular Crust - Rs. 1000</option>
+                            <option value="Stuffed Crust (Rs. 1300)">Stuffed Crust - Rs. 1300</option>
+                            <option value="Thin Crispy (Rs. 1100)">Thin Crispy - Rs. 1100</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-600 uppercase">Extra Toppings:</label>
+                        <select id="build-topping" class="w-full border rounded p-2 text-sm mt-1 bg-gray-50">
+                            <option value="Extra Cheese (+Rs. 200)">Extra Cheese - Rs. 200</option>
+                            <option value="Mushroom & Olives (+Rs. 250)">Mushroom & Olives - Rs. 250</option>
+                            <option value="Extra Chicken (+Rs. 300)">Extra Chicken - Rs. 300</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="addCustomPizza()" class="w-full bg-red-600 text-white font-bold py-2 rounded shadow hover:bg-red-700 transition">Add Custom Pizza</button>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Table Reservation Section -->
+            <div id="reservation" class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+                    <i class="fa-solid fa-chair text-red-600"></i>
+                    <span>Dine-In Table Reservation</span>
+                </h2>
+                <p class="text-gray-500 text-sm mb-4">Reserve a table at our Astore branch in advance.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input type="text" id="res-name" placeholder="Your Name" class="border rounded p-2 text-sm">
+                    <input type="number" id="res-guests" placeholder="Number of Guests" class="border rounded p-2 text-sm">
+                    <input type="datetime-local" id="res-time" class="border rounded p-2 text-sm">
+                </div>
+                <button onclick="bookTable()" class="mt-4 bg-gray-900 text-white font-bold px-6 py-2 rounded text-sm hover:bg-gray-800 transition">Confirm Reservation</button>
             </div>
         </div>
+
+        <!-- Sidebar: Cart, ETA & Checkout -->
+        <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 h-fit sticky top-24">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-between">
+                <span>Your Cart</span>
+                <i class="fa-solid fa-basket-shopping text-red-600"></i>
+            </h3>
+
+            <div id="cart-items" class="divide-y max-h-60 overflow-y-auto mb-4">
+                <p class="text-gray-500 text-center py-4">Your cart is empty.</p>
+            </div>
+
+            <!-- Coupon Box -->
+            <div class="mb-4 flex space-x-2">
+                <input type="text" id="coupon-code" placeholder="Promo Code (CRUST10)" class="border rounded px-3 py-2 text-sm w-full uppercase">
+                <button onclick="applyCoupon()" class="bg-gray-800 text-white px-4 py-2 rounded text-sm font-semibold hover:bg-gray-700">Apply</button>
+            </div>
+
+            <!-- Bill Summary & ETA -->
+            <div class="border-t pt-4 space-y-2 text-sm">
+                <div class="flex justify-between text-gray-600">
+                    <span>Subtotal</span>
+                    <span id="subtotal">Rs. 0</span>
+                </div>
+                <div class="flex justify-between text-gray-600">
+                    <span>Discount</span>
+                    <span id="discount" class="text-green-600">Rs. 0</span>
+                </div>
+                <div class="flex justify-between text-gray-600 font-semibold bg-yellow-50 p-1.5 rounded">
+                    <span>Estimated Delivery Time:</span>
+                    <span id="eta-time" class="text-red-600">35-45 mins</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold text-gray-800 border-t pt-2">
+                    <span>Total Amount</span>
+                    <span id="grand-total">Rs. 0</span>
+                </div>
+            </div>
+
+            <!-- Customer Details Form -->
+            <div class="mt-6 space-y-3">
+                <h4 class="font-bold text-gray-700">Delivery Details</h4>
+                <input type="text" id="cust-name" placeholder="Full Name" class="w-full border rounded p-2 text-sm">
+                <input type="text" id="cust-phone" placeholder="Active Phone Number" class="w-full border rounded p-2 text-sm">
+                <textarea id="cust-address" placeholder="Delivery Address in Astore" class="w-full border rounded p-2 text-sm" rows="2"></textarea>
+                
+                <!-- Dual Payment System -->
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-gray-600 uppercase">Payment Method:</label>
+                    <select id="payment-method" class="w-full border rounded p-2 text-sm bg-gray-50">
+                        <option value="Cash on Delivery">Cash on Delivery (COD)</option>
+                        <option value="Online Payment (Easypaisa/JazzCash)">Online Payment (Easypaisa / JazzCash)</option>
+                    </select>
+                </div>
+
+                <button onclick="checkoutWhatsApp()" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg shadow hover:bg-green-700 transition flex items-center justify-center space-x-2 mt-4">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <span>Confirm Order via WhatsApp</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Order Tracking Section -->
+    <section id="tracking" class="max-w-7xl mx-auto px-4 py-10 bg-white rounded-xl shadow-md my-10">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Live Order Status Tracking</h2>
+        <p class="text-gray-600 text-sm mb-6">Enter your order ID to check real-time cooking & delivery status.</p>
+        <div class="flex space-x-4 max-w-md">
+            <input type="text" id="track-id" placeholder="Enter Order ID (e.g. #102)" class="border rounded px-4 py-2 w-full">
+            <button onclick="trackOrder()" class="bg-red-600 text-white px-6 py-2 rounded font-semibold hover:bg-red-700">Track</button>
+        </div>
+        <div id="tracking-result" class="mt-4 hidden p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800 font-semibold"></div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="section-padding contact-section" id="contact">
-        <div class="container">
-            <div class="section-title">
-                <h2>Inquire About a Puppy</h2>
-                <p>Have questions or want to reserve a puppy? Send us a message today!</p>
+    <!-- Admin Panel Demo Section (With Audio Alarm Simulation) -->
+    <section id="admin" class="max-w-7xl mx-auto px-4 py-10 bg-gray-900 text-white rounded-xl shadow-xl my-10">
+        <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
+            <h2 class="text-2xl font-bold flex items-center space-x-2">
+                <i class="fa-solid fa-gauge text-yellow-400"></i>
+                <span>Admin Dashboard (Back-End Panel)</span>
+            </h2>
+            <div class="flex items-center space-x-3">
+                <button onclick="simulateNewOrderAlert()" class="bg-red-600 text-xs px-3 py-1.5 rounded font-bold animate-pulse hover:bg-red-700">🔔 Simulate New Order Alarm</button>
+                <span class="bg-green-500 text-xs px-3 py-1 rounded-full font-bold">Live</span>
             </div>
-            <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you for your message! We will get back to you soon.');">
-                <div class="form-row">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" placeholder="Your Email" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Subject / Interested Puppy">
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control" placeholder="Your Message or Inquiry..." required></textarea>
-                </div>
-                <button type="submit" class="btn">Send Inquiry</button>
-            </form>
+        </div>
+
+        <!-- Sales Analytics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-gray-800 p-5 rounded-lg border border-gray-700">
+                <p class="text-gray-400 text-sm">Today's Orders</p>
+                <h3 class="text-3xl font-extrabold text-yellow-400 mt-1">24 Orders</h3>
+            </div>
+            <div class="bg-gray-800 p-5 rounded-lg border border-gray-700">
+                <p class="text-gray-400 text-sm">Weekly Sales</p>
+                <h3 class="text-3xl font-extrabold text-green-400 mt-1">Rs. 142,500</h3>
+            </div>
+            <div class="bg-gray-800 p-5 rounded-lg border border-gray-700">
+                <p class="text-gray-400 text-sm">Monthly Revenue</p>
+                <h3 class="text-3xl font-extrabold text-blue-400 mt-1">Rs. 580,000</h3>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Tiny Paws Yorkies. All Rights Reserved. Designed with love for <span>Prime Solutions</span>.</p>
-        </div>
+    <footer class="bg-gray-800 text-white text-center py-6">
+        <p>&copy; 2026 Crust Pizza Astore. Powered by Prime Solutions.</p>
     </footer>
 
-    <!-- JavaScript for Mobile Menu -->
+    <!-- JavaScript Logic -->
     <script>
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
+        let cart = [];
+        let discountRate = 0;
+        let isUrdu = false;
 
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        // Close menu on click link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
+        // Dynamic price update on size change
+        document.querySelectorAll('.size-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const price = selectedOption.getAttribute('data-price');
+                const card = this.closest('.bg-white');
+                card.querySelector('.item-price').innerText = `Rs. ${price}`;
             });
         });
+
+        function addToCart(productName, button) {
+            const card = button.closest('.bg-white');
+            const sizeSelect = card.querySelector('.size-select');
+            const size = sizeSelect.value;
+            const price = parseInt(sizeSelect.options[sizeSelect.selectedIndex].getAttribute('data-price'));
+
+            cart.push({ name: productName, size: size, price: price });
+            updateCartUI();
+        }
+
+        function addCustomPizza() {
+            const dough = document.getElementById('build-dough').value;
+            const topping = document.getElementById('build-topping').value;
+            
+            let price = 1000;
+            if(dough.includes('1300')) price = 1300;
+            if(dough.includes('1100')) price = 1100;
+            if(topping.includes('250')) price += 250;
+            if(topping.includes('300')) price += 300;
+            if(topping.includes('200')) price += 200;
+
+            cart.push({ name: `Custom Pizza (${dough.split(' ')[0]})`, size: topping, price: price });
+            alert('Custom Pizza added successfully to cart!');
+            updateCartUI();
+        }
+
+        function bookTable() {
+            const name = document.getElementById('res-name').value;
+            const guests = document.getElementById('res-guests').value;
+            const time = document.getElementById('res-time').value;
+
+            if(!name || !guests || !time) {
+                alert('Please fill in all table reservation details!');
+                return;
+            }
+            alert(`Table reserved successfully for ${name} (${guests} Guests) at ${time}!`);
+        }
+
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            
+            cartCount.innerText = cart.length;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-gray-500 text-center py-4">Your cart is empty.</p>';
+                document.getElementById('subtotal').innerText = 'Rs. 0';
+                document.getElementById('grand-total').innerText = 'Rs. 0';
+                return;
+            }
+
+            cartItemsContainer.innerHTML = '';
+            let subtotal = 0;
+
+            cart.forEach((item, index) => {
+                subtotal += item.price;
+                cartItemsContainer.innerHTML += `
+                    <div class="py-2 flex justify-between items-center text-sm border-b">
+                        <div>
+                            <p class="font-bold">${item.name}</p>
+                            <span class="text-xs text-gray-500">${item.size} | Rs. ${item.price}</span>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-xs font-bold">Remove</button>
+                    </div>
+                `;
+            });
+
+            let discountAmount = (subtotal * discountRate);
+            let grandTotal = subtotal - discountAmount;
+
+            document.getElementById('subtotal').innerText = `Rs. ${subtotal}`;
+            document.getElementById('discount').innerText = `Rs. ${discountAmount}`;
+            document.getElementById('grand-total').innerText = `Rs. ${grandTotal}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('coupon-code').value.trim().toUpperCase();
+            if (code === 'CRUST10') {
+                discountRate = 0.10;
+                alert('Coupon Applied: 10% Discount Added!');
+                updateCartUI();
+            } else {
+                alert('Invalid Coupon Code! Try using CRUST10');
+            }
+        }
+
+        function checkoutWhatsApp() {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const address = document.getElementById('cust-address').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+
+            if (!name || !phone || !address || cart.length === 0) {
+                alert('Please fill in all delivery details and add items to cart!');
+                return;
+            }
+
+            let orderText = `*New Order - Crust Pizza*%0A%0A`;
+            orderText += `*Customer Name:* ${name}%0A`;
+            orderText += `*Phone:* ${phone}%0A`;
+            orderText += `*Address:* ${address}%0A`;
+            orderText += `*Payment Method:* ${paymentMethod}%0A%0A*Items:*%0A`;
+
+            let subtotal = 0;
+            cart.forEach(item => {
+                orderText += `- ${item.name} (${item.size}): Rs. ${item.price}%0A`;
+                subtotal += item.price;
+            });
+
+            let finalTotal = subtotal - (subtotal * discountRate);
+            orderText += `%0A*Total Bill:* Rs. ${finalTotal} (ETA: 35-45 mins)`;
+
+            const ownerWhatsApp = "923001234567"; 
+            window.open(`https://wa.me/${ownerWhatsApp}?text=${orderText}`, '_blank');
+        }
+
+        function trackOrder() {
+            const orderId = document.getElementById('track-id').value.trim();
+            const resultBox = document.getElementById('tracking-result');
+            if(orderId) {
+                resultBox.classList.remove('hidden');
+                resultBox.innerHTML = `Order ID #${orderId}: Status is <span class="text-red-600 font-extrabold">🔥 Cooking in Kitchen (Out for delivery soon)</span>`;
+            } else {
+                alert('Please enter a valid order ID');
+            }
+        }
+
+        function simulateNewOrderAlert() {
+            // Audio beep simulation for admin alert
+            const audio = new Audio('https://www.soundjay.com/buttons/sounds/beep-07.mp3');
+            audio.play().catch(e => console.log('Audio autoplay restricted'));
+            alert('🚨 NEW ORDER RECEIVED! WhatsApp alert dispatched to owner & kitchen screen updated.');
+        }
+
+        function toggleLanguage() {
+            isUrdu = !isUrdu;
+            if(isUrdu) {
+                document.getElementById('hero-heading').innerText = 'Astore mein garm aur mazedaar pizza ghar par mangwayein!';
+                document.getElementById('hero-sub').innerText = 'Live tracking, custom pizzas aur table booking ke sath foran order karein.';
+            } else {
+                document.getElementById('hero-heading').innerText = 'Hot & Delicious Pizzas Delivered in Astore!';
+                document.getElementById('hero-sub').innerText = 'Order online instantly with live tracking, custom pizzas, and table reservations.';
+            }
+        }
     </script>
 </body>
 </html>
