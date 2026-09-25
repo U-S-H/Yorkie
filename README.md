@@ -8,16 +8,34 @@
     <style>
         .app-screen { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
         .app-screen.active { display: block; opacity: 1; }
-        body { background-color: #0f172a; color: #f8fafc; padding-bottom: 80px; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); }
+        body { background-color: #0f172a; color: #f8fafc; padding-bottom: 90px; }
+        .glass { background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px); }
         @keyframes pulse-slow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .animate-pulse-slow { animation: pulse-slow 3s infinite; }
+        /* Splash Screen Animation */
+        #splash-screen {
+            position: fixed; inset: 0; background: #0f172a; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
     </style>
 </head>
 <body class="font-sans antialiased max-w-md mx-auto min-h-screen relative shadow-2xl overflow-x-hidden border-x border-slate-800">
 
+    <!-- Splash Loading Screen -->
+    <div id="splash-screen">
+        <div class="bg-red-600 p-4 rounded-3xl text-white shadow-2xl shadow-red-600/50 animate-bounce mb-4">
+            <i class="fa-solid fa-pizza-slice text-4xl"></i>
+        </div>
+        <h1 class="font-black text-2xl tracking-wider text-white">CRUST PIZZA</h1>
+        <p class="text-xs text-yellow-400 font-semibold mt-1 tracking-widest uppercase">Welcome to Crust Pizza</p>
+        <div class="w-32 h-1 bg-slate-800 rounded-full mt-6 overflow-hidden">
+            <div id="loader-bar" class="w-full h-full bg-red-600 origin-left animate-pulse"></div>
+        </div>
+    </div>
+
     <!-- Top App Header -->
-    <header class="glass sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-slate-800">
+    <header class="glass sticky top-0 z-45 px-4 py-3 flex justify-between items-center border-b border-slate-800">
         <div class="flex items-center space-x-2.5 cursor-pointer" onclick="switchTab('home')">
             <div class="bg-red-600 p-2 rounded-xl text-white shadow-lg shadow-red-600/30 animate-pulse-slow">
                 <i class="fa-solid fa-pizza-slice text-xl"></i>
@@ -25,7 +43,7 @@
             <div>
                 <h1 class="font-black text-base tracking-wider text-white leading-none">CRUST PIZZA</h1>
                 <!-- Branch Selector -->
-                <select id="branch-select" class="text-[10px] text-yellow-400 bg-transparent border-none font-semibold cursor-pointer focus:outline-none">
+                <select id="branch-select" class="text-[10px] text-yellow-400 bg-transparent border-none font-semibold cursor-pointer focus:outline-none mt-0.5">
                     <option value="Astore Main" class="bg-slate-900">📍 Astore Main Branch</option>
                     <option value="Eidgah Branch" class="bg-slate-900">📍 Astore Eidgah Branch</option>
                 </select>
@@ -58,20 +76,20 @@
             <div class="flex space-x-3 overflow-x-auto pb-1 scrollbar-none">
                 <button onclick="filterMenu('all')" class="bg-red-600 text-white text-xs px-4 py-2 rounded-xl font-bold shadow-md shadow-red-600/30 whitespace-nowrap transition active:scale-95">🔥 All Pizzas</button>
                 <button onclick="filterMenu('deals')" class="glass text-slate-300 text-xs px-4 py-2 rounded-xl font-medium whitespace-nowrap border border-slate-800 hover:text-white transition">🎉 Combo Deals</button>
-                <button onclick="filterMenu('burgers')" class="glass text-slate-300 text-xs px-4 py-2 rounded-xl font-medium whitespace-nowrap border border-slate-800 hover:text-white transition">🍔 Burgers</button>
+                <button onclick="filterMenu('burgers')" class="glass text-slate-300 text-xs px-4 py-2 rounded-xl font-medium whitespace-nowrap border border-slate-800 hover:text-white transition">🍔 Burgers & FastFood</button>
             </div>
 
-            <!-- Product List -->
+            <!-- Product List with Free Images -->
             <div class="space-y-3" id="product-list-container">
                 <!-- Item 1 -->
                 <div class="glass p-3 rounded-2xl border border-slate-800 flex space-x-3 items-center hover:border-red-600/50 transition">
-                    <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=200&q=80" class="w-20 h-20 object-cover rounded-xl shadow">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 object-cover rounded-xl shadow">
                     <div class="flex-1">
                         <div class="flex justify-between items-start">
-                            <h4 class="font-bold text-white text-sm">Chicken Fajita</h4>
+                            <h4 class="font-bold text-white text-sm">Chicken Fajita Special</h4>
                             <span class="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded font-bold">Hot</span>
                         </div>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Spicy chicken, onions, capsicum, mozzarella</p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Spicy chicken, onions, capsicum, extra mozzarella</p>
                         <select class="size-select text-[11px] border border-slate-700 bg-slate-800 text-slate-200 rounded-lg mt-1 p-1 w-full focus:outline-none">
                             <option value="Small" data-price="1200">Small (10") - Rs. 1200</option>
                             <option value="Medium" data-price="1700" selected>Medium (13") - Rs. 1700</option>
@@ -79,7 +97,7 @@
                         </select>
                         <div class="flex justify-between items-center mt-2">
                             <span class="font-black text-red-500 text-sm item-price">Rs. 1700</span>
-                            <button onclick="addToCart('Chicken Fajita', this)" class="bg-red-600 hover:bg-red-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold shadow-lg shadow-red-600/30 transition active:scale-95 flex items-center space-x-1">
+                            <button onclick="addToCart('Chicken Fajita Special', this)" class="bg-red-600 hover:bg-red-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold shadow-lg shadow-red-600/30 transition active:scale-95 flex items-center space-x-1">
                                 <i class="fa-solid fa-plus text-[10px]"></i><span>Add</span>
                             </button>
                         </div>
@@ -88,13 +106,13 @@
 
                 <!-- Item 2 -->
                 <div class="glass p-3 rounded-2xl border border-slate-800 flex space-x-3 items-center hover:border-red-600/50 transition">
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=200&q=80" class="w-20 h-20 object-cover rounded-xl shadow">
+                    <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 object-cover rounded-xl shadow">
                     <div class="flex-1">
                         <div class="flex justify-between items-start">
-                            <h4 class="font-bold text-white text-sm">Super Supreme</h4>
+                            <h4 class="font-bold text-white text-sm">Super Supreme Feast</h4>
                             <span class="text-[10px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded font-bold">Best Seller</span>
                         </div>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Smoked beef, pepperoni, mushrooms, olives</p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Smoked beef, pepperoni, mushrooms, black olives</p>
                         <select class="size-select text-[11px] border border-slate-700 bg-slate-800 text-slate-200 rounded-lg mt-1 p-1 w-full focus:outline-none">
                             <option value="Small" data-price="1350">Small (10") - Rs. 1350</option>
                             <option value="Medium" data-price="1850" selected>Medium (13") - Rs. 1850</option>
@@ -102,7 +120,30 @@
                         </select>
                         <div class="flex justify-between items-center mt-2">
                             <span class="font-black text-red-500 text-sm item-price">Rs. 1850</span>
-                            <button onclick="addToCart('Super Supreme', this)" class="bg-red-600 hover:bg-red-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold shadow-lg shadow-red-600/30 transition active:scale-95 flex items-center space-x-1">
+                            <button onclick="addToCart('Super Supreme Feast', this)" class="bg-red-600 hover:bg-red-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold shadow-lg shadow-red-600/30 transition active:scale-95 flex items-center space-x-1">
+                                <i class="fa-solid fa-plus text-[10px]"></i><span>Add</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="glass p-3 rounded-2xl border border-slate-800 flex space-x-3 items-center hover:border-red-600/50 transition">
+                    <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 object-cover rounded-xl shadow">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-white text-sm">Crown Crust Pizza</h4>
+                            <span class="text-[10px] bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded font-bold">Chef Choice</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Kabab-filled crust edge, rich herb sauce</p>
+                        <select class="size-select text-[11px] border border-slate-700 bg-slate-800 text-slate-200 rounded-lg mt-1 p-1 w-full focus:outline-none">
+                            <option value="Small" data-price="1400">Small (10") - Rs. 1400</option>
+                            <option value="Medium" data-price="1950" selected>Medium (13") - Rs. 1950</option>
+                            <option value="Large" data-price="2550">Large (16") - Rs. 2550</option>
+                        </select>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="font-black text-red-500 text-sm item-price">Rs. 1950</span>
+                            <button onclick="addToCart('Crown Crust Pizza', this)" class="bg-red-600 hover:bg-red-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold shadow-lg shadow-red-600/30 transition active:scale-95 flex items-center space-x-1">
                                 <i class="fa-solid fa-plus text-[10px]"></i><span>Add</span>
                             </button>
                         </div>
@@ -127,7 +168,7 @@
                 <div class="space-y-3">
                     <div>
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Crust Base:</label>
-                        <select id="build-dough" class="w-full border border-slate-700 bg-slate-800 text-slate-200 rounded-xl p-2 text-xs mt-1 focus:outline-none">
+                        <select id="build-dough" class="w-full border border-slate-700 bg-slate-800 text-slate-200 rounded-xl p-2.5 text-xs mt-1 focus:outline-none">
                             <option value="Regular Crust (Rs. 1000)">Regular Crust - Rs. 1000</option>
                             <option value="Stuffed Crust (Rs. 1300)">Stuffed Crust - Rs. 1300</option>
                             <option value="Thin Crispy (Rs. 1100)">Thin Crispy - Rs. 1100</option>
@@ -135,7 +176,7 @@
                     </div>
                     <div>
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Extra Toppings:</label>
-                        <select id="build-topping" class="w-full border border-slate-700 bg-slate-800 text-slate-200 rounded-xl p-2 text-xs mt-1 focus:outline-none">
+                        <select id="build-topping" class="w-full border border-slate-700 bg-slate-800 text-slate-200 rounded-xl p-2.5 text-xs mt-1 focus:outline-none">
                             <option value="Extra Cheese (+Rs. 200)">Extra Cheese - Rs. 200</option>
                             <option value="Mushroom & Olives (+Rs. 250)">Mushroom & Olives - Rs. 250</option>
                             <option value="Extra Chicken (+Rs. 300)">Extra Chicken - Rs. 300</option>
@@ -261,31 +302,40 @@
 
     </main>
 
-    <!-- Bottom Clickable Navigation Bar (App Style) -->
-    <nav class="glass fixed bottom-0 left-0 right-0 max-w-md mx-auto border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-50 shadow-2xl">
-        <button onclick="switchTab('home')" id="nav-home" class="text-red-500 flex flex-col items-center text-[11px] font-bold space-y-1 transition active:scale-90">
-            <i class="fa-solid fa-house text-lg"></i><span>Menu</span>
+    <!-- Fixed Bottom Horizontal Navigation Bar -->
+    <nav class="glass fixed bottom-0 left-0 right-0 max-w-md mx-auto border-t border-slate-800 px-4 py-3 flex justify-around items-center z-40 shadow-2xl">
+        <button onclick="switchTab('home')" id="nav-home" class="text-red-500 flex flex-col items-center text-[10px] font-bold space-y-1 transition active:scale-90 w-16">
+            <i class="fa-solid fa-house text-base"></i><span>Menu</span>
         </button>
-        <button onclick="switchTab('builder')" id="nav-builder" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[11px] font-medium space-y-1 transition active:scale-90">
-            <i class="fa-solid fa-wand-magic-sparkles text-lg"></i><span>Builder</span>
+        <button onclick="switchTab('builder')" id="nav-builder" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-1 transition active:scale-90 w-16">
+            <i class="fa-solid fa-wand-magic-sparkles text-base"></i><span>Builder</span>
         </button>
-        <button onclick="switchTab('cart')" id="nav-cart" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[11px] font-medium space-y-1 relative transition active:scale-90">
-            <i class="fa-solid fa-cart-shopping text-lg"></i><span>Cart</span>
-            <span id="nav-badge" class="absolute -top-1.5 right-1 bg-red-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+        <button onclick="switchTab('cart')" id="nav-cart" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-1 relative transition active:scale-90 w-16">
+            <i class="fa-solid fa-cart-shopping text-base"></i><span>Cart</span>
+            <span id="nav-badge" class="absolute -top-1 right-2 bg-red-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">0</span>
         </button>
-        <button onclick="switchTab('tracking')" id="nav-tracking" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[11px] font-medium space-y-1 transition active:scale-90">
-            <i class="fa-solid fa-location-crosshairs text-lg"></i><span>Track</span>
+        <button onclick="switchTab('tracking')" id="nav-tracking" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-1 transition active:scale-90 w-16">
+            <i class="fa-solid fa-location-crosshairs text-base"></i><span>Track</span>
         </button>
     </nav>
 
     <!-- Footer Branding -->
-    <footer class="text-center text-[10px] text-slate-500 pb-20 pt-4">
+    <footer class="text-center text-[10px] text-slate-500 pb-24 pt-4">
         <p>&copy; 2026 Crust Pizza Astore & Eidgah.</p>
         <p class="text-yellow-400/80 font-semibold mt-0.5">Designed & Developed by Prime Solutions 🚀</p>
     </footer>
 
     <!-- JavaScript App Logic -->
     <script>
+        // Splash screen auto hide after 1.2 seconds
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                setTimeout(() => splash.remove(), 500);
+            }, 1200);
+        });
+
         let cart = [];
         let discountRate = 0;
 
@@ -296,7 +346,7 @@
             ['home', 'builder', 'cart', 'tracking'].forEach(t => {
                 const btn = document.getElementById(`nav-${t}`);
                 if(btn) {
-                    btn.className = (t === tabId) ? "text-red-500 flex flex-col items-center text-[11px] font-bold space-y-1 transition active:scale-90" : "text-slate-400 hover:text-slate-200 flex flex-col items-center text-[11px] font-medium space-y-1 transition active:scale-90";
+                    btn.className = (t === tabId) ? "text-red-500 flex flex-col items-center text-[10px] font-bold space-y-1 transition active:scale-90 w-16" : "text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-1 transition active:scale-90 w-16";
                 }
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -319,7 +369,6 @@
             cart.push({ name, size, price });
             updateCartUI();
             
-            // Visual feedback animation on button
             btn.innerHTML = `<i class="fa-solid fa-check text-[10px]"></i><span>Added</span>`;
             setTimeout(() => {
                 btn.innerHTML = `<i class="fa-solid fa-plus text-[10px]"></i><span>Add</span>`;
