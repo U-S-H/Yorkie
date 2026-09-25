@@ -8,15 +8,31 @@
     <style>
         .app-screen { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
         .app-screen.active { display: block; opacity: 1; }
-        body { background-color: #0f172a; color: #f8fafc; padding-bottom: 90px; }
-        .glass { background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px); }
+        body { background-color: #0f172a; color: #f8fafc; padding-bottom: 90px; margin: 0; }
+        .glass { background: rgba(30, 41, 59, 0.9); backdrop-filter: blur(12px); }
         @keyframes pulse-slow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .animate-pulse-slow { animation: pulse-slow 3s infinite; }
+        
         /* Splash Screen Animation */
         #splash-screen {
-            position: fixed; inset: 0; background: #0f172a; z-index: 9999;
+            position: fixed; inset: 0; background: #0f172a; z-index: 99999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.5s ease;
+        }
+
+        /* Fixed Bottom Navbar Fix */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 28rem;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 9999;
         }
     </style>
 </head>
@@ -35,7 +51,7 @@
     </div>
 
     <!-- Top App Header -->
-    <header class="glass sticky top-0 z-45 px-4 py-3 flex justify-between items-center border-b border-slate-800">
+    <header class="glass sticky top-0 z-40 px-4 py-3 flex justify-between items-center border-b border-slate-800">
         <div class="flex items-center space-x-2.5 cursor-pointer" onclick="switchTab('home')">
             <div class="bg-red-600 p-2 rounded-xl text-white shadow-lg shadow-red-600/30 animate-pulse-slow">
                 <i class="fa-solid fa-pizza-slice text-xl"></i>
@@ -302,25 +318,25 @@
 
     </main>
 
-    <!-- Fixed Bottom Horizontal Navigation Bar -->
-    <nav class="glass fixed bottom-0 left-0 right-0 max-w-md mx-auto border-t border-slate-800 px-4 py-3 flex justify-around items-center z-40 shadow-2xl">
-        <button onclick="switchTab('home')" id="nav-home" class="text-red-500 flex flex-col items-center text-[10px] font-bold space-y-1 transition active:scale-90 w-16">
+    <!-- Perfectly Fixed Horizontal Bottom Navigation Bar -->
+    <nav class="glass bottom-nav border-t border-slate-800 px-4 py-2.5 shadow-2xl">
+        <button onclick="switchTab('home')" id="nav-home" class="text-red-500 flex flex-col items-center text-[10px] font-bold space-y-0.5 transition active:scale-90 flex-1">
             <i class="fa-solid fa-house text-base"></i><span>Menu</span>
         </button>
-        <button onclick="switchTab('builder')" id="nav-builder" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-1 transition active:scale-90 w-16">
+        <button onclick="switchTab('builder')" id="nav-builder" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-0.5 transition active:scale-90 flex-1">
             <i class="fa-solid fa-wand-magic-sparkles text-base"></i><span>Builder</span>
         </button>
-        <button onclick="switchTab('cart')" id="nav-cart" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-1 relative transition active:scale-90 w-16">
+        <button onclick="switchTab('cart')" id="nav-cart" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-0.5 relative transition active:scale-90 flex-1">
             <i class="fa-solid fa-cart-shopping text-base"></i><span>Cart</span>
-            <span id="nav-badge" class="absolute -top-1 right-2 bg-red-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+            <span id="nav-badge" class="absolute -top-1 right-5 bg-red-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">0</span>
         </button>
-        <button onclick="switchTab('tracking')" id="nav-tracking" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-1 transition active:scale-90 w-16">
+        <button onclick="switchTab('tracking')" id="nav-tracking" class="text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-0.5 transition active:scale-90 flex-1">
             <i class="fa-solid fa-location-crosshairs text-base"></i><span>Track</span>
         </button>
     </nav>
 
     <!-- Footer Branding -->
-    <footer class="text-center text-[10px] text-slate-500 pb-24 pt-4">
+    <footer class="text-center text-[10px] text-slate-500 pb-20 pt-4">
         <p>&copy; 2026 Crust Pizza Astore & Eidgah.</p>
         <p class="text-yellow-400/80 font-semibold mt-0.5">Designed & Developed by Prime Solutions 🚀</p>
     </footer>
@@ -346,7 +362,7 @@
             ['home', 'builder', 'cart', 'tracking'].forEach(t => {
                 const btn = document.getElementById(`nav-${t}`);
                 if(btn) {
-                    btn.className = (t === tabId) ? "text-red-500 flex flex-col items-center text-[10px] font-bold space-y-1 transition active:scale-90 w-16" : "text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-1 transition active:scale-90 w-16";
+                    btn.className = (t === tabId) ? "text-red-500 flex flex-col items-center text-[10px] font-bold space-y-0.5 transition active:scale-90 flex-1" : "text-slate-400 hover:text-slate-200 flex flex-col items-center text-[10px] font-medium space-y-0.5 transition active:scale-90 flex-1";
                 }
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
