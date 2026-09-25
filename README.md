@@ -40,16 +40,16 @@
 
         /* Modern Spin Wheel Styles */
         .wheel-container {
-            position: relative; width: 240px; height: 240px; margin: 0 auto;
+            position: relative; width: 260px; height: 260px; margin: 0 auto;
         }
         .wheel-pointer {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
             width: 0; height: 0;
             border-left: 14px solid transparent;
             border-right: 14px solid transparent;
-            border-top: 22px solid #facc15;
-            z-index: 20;
-            filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5));
+            border-top: 24px solid #facc15;
+            z-index: 30;
+            filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.6));
         }
         .wheel-disc {
             width: 100%; height: 100%; border-radius: 50%;
@@ -64,7 +64,36 @@
                 #ec4899 300deg 360deg
             );
             transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1);
+            position: relative;
+            overflow: hidden;
         }
+        
+        /* Wheel Slice Text Overlay */
+        .wheel-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 30px;
+            margin-top: -15px;
+            transform-origin: 0% 50%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 18px;
+            font-size: 12px;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+        
+        .label-1 { transform: rotate(30deg); }
+        .label-2 { transform: rotate(90deg); }
+        .label-3 { transform: rotate(150deg); }
+        .label-4 { transform: rotate(210deg); }
+        .label-5 { transform: rotate(270deg); }
+        .label-6 { transform: rotate(330deg); }
+
         @media print {
             body * { visibility: hidden; }
             #printable-receipt, #printable-receipt * { visibility: visible; }
@@ -396,18 +425,27 @@
 
     </main>
 
-    <!-- MODERN SPIN WHEEL MODAL -->
+    <!-- MODERN SPIN WHEEL MODAL WITH LABELS -->
     <div id="spin-modal" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center hidden p-4 backdrop-blur-sm">
         <div class="glass p-6 rounded-3xl border border-slate-700 text-center max-w-xs w-full space-y-4 relative">
             <h3 class="font-black text-lg text-white">SPIN & WIN DEALS</h3>
             <p class="text-[11px] text-slate-300">Tap below to spin for instant discount coupons!</p>
             
-            <!-- Dynamic Wheel Graphic -->
+            <!-- Dynamic Wheel Graphic with Slice Labels -->
             <div class="wheel-container">
                 <div class="wheel-pointer"></div>
-                <div id="modern-wheel" class="wheel-disc flex items-center justify-center">
-                    <div class="w-10 h-10 bg-slate-900 border-2 border-yellow-400 rounded-full flex items-center justify-center z-10 shadow-lg">
-                        <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
+                <div id="modern-wheel" class="wheel-disc">
+                    <div class="wheel-label label-1">10% OFF</div>
+                    <div class="wheel-label label-2">FREE DRINK</div>
+                    <div class="wheel-label label-3">15% OFF</div>
+                    <div class="wheel-label label-4">20% OFF</div>
+                    <div class="wheel-label label-5">FREE FRIES</div>
+                    <div class="wheel-label label-6">5% OFF</div>
+
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-10 h-10 bg-slate-900 border-2 border-yellow-400 rounded-full flex items-center justify-center z-20 shadow-lg">
+                            <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -544,13 +582,14 @@
             btn.disabled = true;
             res.innerText = "Spinning...";
 
-            const randomDegree = 1800 + Math.floor(Math.random() * 360);
-            wheel.style.transform = `rotate(${randomDegree}deg)`;
+            // Rotation angle targeted specifically for 15% OFF slice
+            const targetRotation = 3600 + 210; 
+            wheel.style.transform = `rotate(${targetRotation}deg)`;
 
             setTimeout(() => {
                 discountRate = 0.15;
                 updateCartUI();
-                res.innerHTML = "🎉 WON 15% DISCOUNT DISCOUNT!";
+                res.innerHTML = "🎉 YOU WON 15% OFF DISCOUNT!";
                 showToast("15% Discount unlocked!");
                 isSpinning = false;
             }, 4000);
