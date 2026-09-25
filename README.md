@@ -2,18 +2,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Crust Pizza - Pro Super App</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Crust Pizza - Ultra Modern UI</title>
+    <!-- Tailwind CSS Standard CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f8fafc;
+            padding-bottom: 90px;
+            margin: 0;
+        }
         .app-screen { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
         .app-screen.active { display: block; opacity: 1; }
-        body { background-color: #0f172a; color: #f8fafc; padding-bottom: 90px; margin: 0; }
-        .glass { background: rgba(30, 41, 59, 0.9); backdrop-filter: blur(12px); }
-        @keyframes pulse-slow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .animate-pulse-slow { animation: pulse-slow 3s infinite; }
         
-        /* Modern Splash Screen Loader */
+        /* Glassmorphism Ultra Premium */
+        .glass-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.8));
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .glass-nav {
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Modern Glow & Gradients */
+        .glow-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.35); }
+        .glow-yellow { box-shadow: 0 0 20px rgba(245, 158, 11, 0.35); }
+        .gradient-hot { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
+        .gradient-gold { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+        /* Smooth Hide Scrollbars */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Modern Spinner */
         #splash-screen {
             position: fixed; inset: 0; background: #0b0f19; z-index: 99999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -28,281 +56,217 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0; max-width: 28rem;
-            margin: 0 auto; display: flex; flex-direction: row; justify-content: space-around;
-            align-items: center; z-index: 9999;
-        }
-        #toast-container {
-            position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
-            z-index: 99999; width: 90%; max-width: 400px; pointer-events: none;
-        }
-
-        /* Modern Spin Wheel Styles */
-        .wheel-container {
-            position: relative; width: 260px; height: 260px; margin: 0 auto;
-        }
+        /* Wheel Styles */
+        .wheel-container { position: relative; width: 250px; height: 250px; margin: 0 auto; }
         .wheel-pointer {
-            position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
             width: 0; height: 0;
-            border-left: 14px solid transparent;
-            border-right: 14px solid transparent;
-            border-top: 24px solid #facc15;
-            z-index: 30;
+            border-left: 12px solid transparent; border-right: 12px solid transparent;
+            border-top: 22px solid #facc15; z-index: 30;
             filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.6));
         }
         .wheel-disc {
             width: 100%; height: 100%; border-radius: 50%;
-            border: 6px solid #facc15;
-            box-shadow: 0 0 20px rgba(250, 204, 21, 0.4), inset 0 0 15px rgba(0,0,0,0.6);
+            border: 5px solid #facc15;
             background: conic-gradient(
-                #ef4444 0deg 60deg,
-                #3b82f6 60deg 120deg,
-                #10b981 120deg 180deg,
-                #f59e0b 180deg 240deg,
-                #8b5cf6 240deg 300deg,
-                #ec4899 300deg 360deg
+                #ef4444 0deg 60deg, #3b82f6 60deg 120deg,
+                #10b981 120deg 180deg, #f59e0b 180deg 240deg,
+                #8b5cf6 240deg 300deg, #ec4899 300deg 360deg
             );
             transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1);
-            position: relative;
-            overflow: hidden;
+            position: relative; overflow: hidden;
         }
-        
-        /* Wheel Slice Text Overlay */
         .wheel-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 50%;
-            height: 30px;
-            margin-top: -15px;
-            transform-origin: 0% 50%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 18px;
-            font-size: 12px;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            position: absolute; top: 50%; left: 50%; width: 50%; height: 30px; margin-top: -15px;
+            transform-origin: 0% 50%; display: flex; align-items: center; justify-content: flex-end;
+            padding-right: 15px; font-size: 11px; font-weight: 900; color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
         }
-        
-        .label-1 { transform: rotate(30deg); }
-        .label-2 { transform: rotate(90deg); }
-        .label-3 { transform: rotate(150deg); }
-        .label-4 { transform: rotate(210deg); }
-        .label-5 { transform: rotate(270deg); }
-        .label-6 { transform: rotate(330deg); }
-
-        @media print {
-            body * { visibility: hidden; }
-            #printable-receipt, #printable-receipt * { visibility: visible; }
-            #printable-receipt { position: absolute; left: 0; top: 0; width: 100%; color: black; background: white; padding: 20px; }
-        }
+        .label-1 { transform: rotate(30deg); } .label-2 { transform: rotate(90deg); }
+        .label-3 { transform: rotate(150deg); } .label-4 { transform: rotate(210deg); }
+        .label-5 { transform: rotate(270deg); } .label-6 { transform: rotate(330deg); }
     </style>
 </head>
-<body class="font-sans antialiased max-w-md mx-auto min-h-screen relative shadow-2xl overflow-x-hidden border-x border-slate-800">
+<body class="max-w-md mx-auto min-h-screen relative border-x border-slate-800/80 shadow-2xl">
 
-    <!-- Modern Splash Loading Screen -->
+    <!-- Splash Screen Loader -->
     <div id="splash-screen">
         <div class="relative flex items-center justify-center mb-6">
             <div class="modern-spinner"></div>
-            <div class="absolute bg-red-600 p-3 rounded-2xl text-white shadow-xl shadow-red-600/50">
+            <div class="absolute bg-red-600 p-3.5 rounded-2xl text-white glow-red">
                 <i class="fa-solid fa-pizza-slice text-2xl"></i>
             </div>
         </div>
-        <h1 class="font-black text-2xl tracking-wider text-white">CRUST PIZZA</h1>
-        <p class="text-xs text-yellow-400 font-semibold mt-1 tracking-widest uppercase">Astore & Eidgah Super App</p>
+        <h1 class="font-black text-2xl tracking-widest text-white">CRUST PIZZA</h1>
+        <p class="text-[10px] text-yellow-400 font-bold mt-1 tracking-widest uppercase">Ultra Modern Super App</p>
     </div>
 
     <!-- Toast Container -->
-    <div id="toast-container" class="space-y-2"></div>
-
-    <!-- Printable Receipt -->
-    <div id="printable-receipt" class="hidden text-black bg-white p-4 font-mono text-xs"></div>
+    <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-11/12 max-w-sm space-y-2 pointer-events-none"></div>
 
     <!-- App Header -->
-    <header class="glass sticky top-0 z-40 px-4 py-3 flex justify-between items-center border-b border-slate-800">
-        <div class="flex items-center space-x-2.5 cursor-pointer" onclick="switchTab('home')">
-            <div class="bg-red-600 p-2 rounded-xl text-white shadow-lg shadow-red-600/30 animate-pulse-slow">
-                <i class="fa-solid fa-pizza-slice text-xl"></i>
+    <header class="sticky top-0 z-40 px-4 py-3.5 flex justify-between items-center glass-nav border-b border-slate-800">
+        <div class="flex items-center space-x-3" onclick="switchTab('home')">
+            <div class="bg-gradient-to-tr from-red-600 to-orange-500 p-2.5 rounded-2xl text-white glow-red">
+                <i class="fa-solid fa-pizza-slice text-lg"></i>
             </div>
             <div>
-                <h1 class="font-black text-base tracking-wider text-white leading-none">CRUST PIZZA</h1>
-                <select id="branch-select" onchange="updateDeliveryCharges()" class="text-[10px] text-yellow-400 bg-transparent border-none font-semibold cursor-pointer focus:outline-none mt-0.5">
-                    <option value="Astore Main" class="bg-slate-900">📍 Astore Main Branch</option>
-                    <option value="Eidgah Branch" class="bg-slate-900">📍 Astore Eidgah Branch (+Rs. 100)</option>
-                </select>
+                <h1 class="font-black text-lg tracking-wide text-white leading-tight">CRUST PIZZA</h1>
+                <div class="flex items-center space-x-1 text-yellow-400 text-[11px] font-bold">
+                    <i class="fa-solid fa-location-dot text-[10px]"></i>
+                    <select id="branch-select" onchange="updateDeliveryCharges()" class="bg-transparent border-none text-yellow-400 font-bold focus:outline-none cursor-pointer">
+                        <option value="Astore Main" class="bg-slate-900">Astore Main Branch</option>
+                        <option value="Eidgah Branch" class="bg-slate-900">Astore Eidgah Branch (+Rs. 100)</option>
+                    </select>
+                </div>
             </div>
         </div>
-        <div class="flex items-center space-x-2">
-            <button onclick="switchTab('admin')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-1.5 rounded-xl font-bold border border-slate-700 flex items-center space-x-1.5 transition active:scale-95">
-                <i class="fa-solid fa-gauge text-yellow-400"></i>
-                <span>Admin</span>
-            </button>
-        </div>
+        <button onclick="switchTab('admin')" class="bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-xl font-bold border border-slate-700 flex items-center space-x-1.5 transition active:scale-95">
+            <i class="fa-solid fa-chart-pie text-yellow-400"></i>
+            <span>Admin</span>
+        </button>
     </header>
 
-    <!-- Main Screens Container -->
+    <!-- Main Body -->
     <main class="p-4 space-y-4">
 
         <!-- SCREEN 1: HOME -->
         <div id="screen-home" class="app-screen active space-y-4">
             
-            <!-- AI Recommendation Assistant -->
-            <div class="bg-slate-900/90 border border-yellow-500/30 p-3.5 rounded-2xl relative overflow-hidden">
+            <!-- AI Smart Recommendation -->
+            <div class="glass-card p-4 rounded-3xl border border-amber-500/30 relative overflow-hidden">
                 <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center space-x-2">
-                        <i class="fa-solid fa-robot text-yellow-400 text-lg"></i>
-                        <h3 class="text-xs font-bold text-white">AI Pizza Recommendation</h3>
+                        <div class="bg-amber-400/10 p-2 rounded-xl text-yellow-400">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-black text-white uppercase tracking-wider">AI Pizza Recommendation</h3>
+                            <p class="text-[10px] text-slate-400">Find best pizza according to budget</p>
+                        </div>
                     </div>
-                    <span class="text-[9px] bg-yellow-400/20 text-yellow-300 px-2 py-0.5 rounded-full font-bold">SMART</span>
+                    <span class="text-[9px] bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 px-2 py-0.5 rounded-full font-black">SMART AI</span>
                 </div>
-                <div class="flex space-x-2">
-                    <select id="ai-budget" class="bg-slate-800 text-slate-200 border border-slate-700 rounded-xl text-[11px] p-2 flex-1 focus:outline-none">
+                <div class="flex space-x-2 mt-3">
+                    <select id="ai-budget" class="bg-slate-900/90 text-slate-200 border border-slate-700/80 rounded-2xl text-xs p-3 flex-1 focus:outline-none focus:border-amber-400">
                         <option value="1500">Budget: Under Rs. 1500</option>
                         <option value="2000" selected>Budget: Under Rs. 2000</option>
                         <option value="2500">Budget: Unlimited</option>
                     </select>
-                    <button onclick="getAIRecommendation()" class="bg-yellow-400 text-slate-950 font-black px-3 rounded-xl text-xs flex items-center space-x-1 hover:bg-yellow-300 transition">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <button onclick="getAIRecommendation()" class="gradient-gold text-slate-950 font-black px-4 rounded-2xl text-xs flex items-center space-x-1.5 shadow-lg active:scale-95 transition">
+                        <i class="fa-solid fa-bolt"></i>
                         <span>Suggest</span>
                     </button>
                 </div>
-                <div id="ai-result" class="hidden mt-2 pt-2 border-t border-slate-800 text-xs text-yellow-300 font-semibold flex justify-between items-center">
+                <div id="ai-result" class="hidden mt-3 pt-3 border-t border-slate-800 text-xs text-yellow-300 font-bold flex justify-between items-center">
                     <span id="ai-text"></span>
-                    <button id="ai-add-btn" class="bg-red-600 text-white px-2 py-1 rounded-lg text-[10px] font-bold">Add Suggested</button>
+                    <button id="ai-add-btn" class="bg-red-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-md">Add Now</button>
                 </div>
             </div>
 
-            <!-- Banner & Modern Spin Trigger -->
-            <div class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-500 text-white p-4 rounded-2xl shadow-xl relative overflow-hidden">
+            <!-- Promo Banner -->
+            <div class="gradient-hot text-white p-5 rounded-3xl glow-red relative overflow-hidden">
                 <div class="relative z-10">
-                    <span class="bg-black/40 text-yellow-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-md">Hot Promo</span>
-                    <h2 class="text-xl font-black mt-1">Spin & Win Free Deals!</h2>
-                    <p class="text-xs text-slate-100 mt-0.5">Instant discounts & promo vouchers waiting.</p>
-                    <button onclick="openSpinWheel()" class="mt-3 bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-xs font-black px-3.5 py-2 rounded-xl shadow-lg transition active:scale-95 flex items-center space-x-2">
+                    <span class="bg-black/30 text-yellow-300 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-md border border-white/10">LIMITED OFFER</span>
+                    <h2 class="text-2xl font-black mt-2 leading-tight">Spin & Win Deals!</h2>
+                    <p class="text-xs text-red-100 mt-1 font-medium">Win instant discounts & free food vouchers!</p>
+                    <button onclick="openSpinWheel()" class="mt-4 bg-slate-950 hover:bg-slate-900 text-yellow-400 text-xs font-black px-4 py-2.5 rounded-2xl shadow-2xl transition active:scale-95 flex items-center space-x-2 border border-yellow-400/30">
                         <i class="fa-solid fa-dharmachakra animate-spin text-sm"></i>
-                        <span>Spin Magic Wheel Now</span>
+                        <span>Spin Magic Wheel</span>
                     </button>
                 </div>
-                <i class="fa-solid fa-pizza-slice text-white/10 text-9xl absolute -right-6 -bottom-8"></i>
+                <i class="fa-solid fa-pizza-slice text-white/10 text-9xl absolute -right-6 -bottom-6"></i>
             </div>
 
-            <!-- Quick Service Buttons -->
-            <div class="grid grid-cols-2 gap-2.5">
-                <button onclick="switchTab('table')" class="glass p-2.5 rounded-xl border border-slate-800 text-left hover:border-yellow-500 transition flex items-center space-x-2.5">
-                    <div class="bg-yellow-500/20 p-2 rounded-lg text-yellow-400"><i class="fa-solid fa-chair text-sm"></i></div>
+            <!-- Quick Service Actions -->
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="switchTab('builder')" class="glass-card p-3.5 rounded-2xl border border-slate-800 text-left hover:border-yellow-500/50 transition flex items-center space-x-3 active:scale-95">
+                    <div class="bg-amber-500/10 p-2.5 rounded-xl text-yellow-400"><i class="fa-solid fa-sliders text-base"></i></div>
                     <div>
-                        <div class="text-xs font-bold text-white">Book Table</div>
-                        <div class="text-[9px] text-slate-400">Reserve dine-in</div>
+                        <div class="text-xs font-black text-white">Half-&-Half</div>
+                        <div class="text-[10px] text-slate-400">Custom 2 Flavors</div>
                     </div>
                 </button>
-                <button onclick="switchTab('refer')" class="glass p-2.5 rounded-xl border border-slate-800 text-left hover:border-green-500 transition flex items-center space-x-2.5">
-                    <div class="bg-green-500/20 p-2 rounded-lg text-green-400"><i class="fa-solid fa-share-nodes text-sm"></i></div>
+                <button onclick="switchTab('tracking')" class="glass-card p-3.5 rounded-2xl border border-slate-800 text-left hover:border-red-500/50 transition flex items-center space-x-3 active:scale-95">
+                    <div class="bg-red-500/10 p-2.5 rounded-xl text-red-400"><i class="fa-solid fa-location-dot text-base"></i></div>
                     <div>
-                        <div class="text-xs font-bold text-white">Refer & Earn</div>
-                        <div class="text-[9px] text-slate-400">Get reward points</div>
+                        <div class="text-xs font-black text-white">Track Order</div>
+                        <div class="text-[10px] text-slate-400">Live Kitchen Status</div>
                     </div>
                 </button>
             </div>
 
-            <!-- Category Filters -->
-            <div class="flex space-x-2 overflow-x-auto pb-1 scrollbar-none">
-                <button onclick="filterMenu('all')" class="bg-red-600 text-white text-xs px-3.5 py-2 rounded-xl font-bold shadow-md shadow-red-600/30 whitespace-nowrap">🔥 All Menu</button>
-                <button onclick="filterMenu('deals')" class="glass text-slate-300 text-xs px-3.5 py-2 rounded-xl font-medium whitespace-nowrap border border-slate-800">🎉 Deals & Combos</button>
-                <button onclick="filterMenu('pizzas')" class="glass text-slate-300 text-xs px-3.5 py-2 rounded-xl font-medium whitespace-nowrap border border-slate-800">🍕 Pizzas</button>
-                <button onclick="filterMenu('burgers')" class="glass text-slate-300 text-xs px-3.5 py-2 rounded-xl font-medium whitespace-nowrap border border-slate-800">🍔 Burgers & Fast Food</button>
+            <!-- Modern Horizontal Category Filters -->
+            <div class="flex space-x-2.5 overflow-x-auto no-scrollbar py-1">
+                <button onclick="filterMenu('all')" class="gradient-hot text-white text-xs px-4 py-2.5 rounded-2xl font-black shadow-lg shadow-red-600/30 whitespace-nowrap">🔥 All Menu</button>
+                <button onclick="filterMenu('deals')" class="glass-card text-slate-300 text-xs px-4 py-2.5 rounded-2xl font-bold whitespace-nowrap border border-slate-800 hover:text-white">🎉 Special Deals</button>
+                <button onclick="filterMenu('pizzas')" class="glass-card text-slate-300 text-xs px-4 py-2.5 rounded-2xl font-bold whitespace-nowrap border border-slate-800 hover:text-white">🍕 Pizzas</button>
+                <button onclick="filterMenu('burgers')" class="glass-card text-slate-300 text-xs px-4 py-2.5 rounded-2xl font-bold whitespace-nowrap border border-slate-800 hover:text-white">🍔 Fast Food</button>
             </div>
 
-            <!-- Product Items List with Images -->
-            <div class="space-y-3" id="product-list-container">
+            <!-- Product Cards List -->
+            <div class="space-y-3.5" id="product-list-container">
                 
-                <!-- Combo Deal 1 -->
-                <div class="glass p-3 rounded-2xl border border-slate-800 flex space-x-3 items-center hover:border-red-600/50 transition relative">
-                    <button onclick="toggleWishlist('Family Feast Combo', this)" class="absolute top-2 right-2 text-slate-400 hover:text-red-500 text-sm z-10 bg-slate-900/60 p-1.5 rounded-full"><i class="fa-regular fa-heart"></i></button>
-                    <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 object-cover rounded-xl shadow">
+                <!-- Item 1 -->
+                <div class="glass-card p-3.5 rounded-3xl border border-slate-800/80 flex space-x-3.5 items-center hover:border-red-500/40 transition relative">
+                    <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80" class="w-24 h-24 object-cover rounded-2xl shadow-lg">
                     <div class="flex-1">
-                        <div class="flex justify-between items-start pr-6">
-                            <h4 class="font-bold text-white text-sm">Family Feast Combo</h4>
-                            <span class="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded font-bold">Mega Deal</span>
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-black text-white text-sm">Family Feast Combo</h4>
+                            <span class="text-[9px] bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-full font-black">MEGA DEAL</span>
                         </div>
-                        <p class="text-[11px] text-slate-400 mt-0.5">2 Large Pizzas + 1.5L Drink + Garlic Bread</p>
-                        <select class="size-select text-[11px] border border-slate-700 bg-slate-800 text-slate-200 rounded-lg mt-1 p-1 w-full focus:outline-none">
+                        <p class="text-[11px] text-slate-400 mt-1">2 Large Pizzas + 1.5L Drink + Garlic Bread</p>
+                        <select class="size-select text-[11px] border border-slate-700 bg-slate-900 text-slate-200 rounded-xl mt-2 p-1.5 w-full focus:outline-none">
                             <option value="Standard Deal" data-price="3800">Standard Package - Rs. 3800</option>
                         </select>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="font-black text-red-500 text-sm item-price">Rs. 3800</span>
-                            <button onclick="addToCart('Family Feast Combo', this)" class="bg-red-600 hover:bg-red-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold shadow-lg shadow-red-600/30 flex items-center space-x-1">
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="font-black text-red-500 text-base">Rs. 3800</span>
+                            <button onclick="addToCart('Family Feast Combo', this)" class="gradient-hot hover:opacity-90 text-white text-xs px-4 py-2 rounded-xl font-bold shadow-lg glow-red flex items-center space-x-1 active:scale-95 transition">
                                 <i class="fa-solid fa-plus text-[10px]"></i><span>Add</span>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Pizza 1 -->
-                <div class="glass p-3 rounded-2xl border border-slate-800 flex space-x-3 items-center hover:border-red-600/50 transition relative">
-                    <button onclick="toggleWishlist('Chicken Fajita Special', this)" class="absolute top-2 right-2 text-slate-400 hover:text-red-500 text-sm z-10 bg-slate-900/60 p-1.5 rounded-full"><i class="fa-regular fa-heart"></i></button>
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 object-cover rounded-xl shadow">
+                <!-- Item 2 -->
+                <div class="glass-card p-3.5 rounded-3xl border border-slate-800/80 flex space-x-3.5 items-center hover:border-red-500/40 transition relative">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=300&q=80" class="w-24 h-24 object-cover rounded-2xl shadow-lg">
                     <div class="flex-1">
-                        <div class="flex justify-between items-start pr-6">
-                            <h4 class="font-bold text-white text-sm">Chicken Fajita Special</h4>
-                            <span class="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded font-bold">Hot</span>
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-black text-white text-sm">Chicken Fajita Special</h4>
+                            <span class="text-[9px] bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-full font-black">POPULAR</span>
                         </div>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Spicy chicken, onions, capsicum, mozzarella</p>
-                        <select class="size-select text-[11px] border border-slate-700 bg-slate-800 text-slate-200 rounded-lg mt-1 p-1 w-full focus:outline-none">
+                        <p class="text-[11px] text-slate-400 mt-1">Spicy chicken, onions, capsicum, mozzarella</p>
+                        <select class="size-select text-[11px] border border-slate-700 bg-slate-900 text-slate-200 rounded-xl mt-2 p-1.5 w-full focus:outline-none">
                             <option value="Small" data-price="1200">Small (10") - Rs. 1200</option>
                             <option value="Medium" data-price="1700" selected>Medium (13") - Rs. 1700</option>
                             <option value="Large" data-price="2200">Large (16") - Rs. 2200</option>
                         </select>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="font-black text-red-500 text-sm item-price">Rs. 1700</span>
-                            <button onclick="addToCart('Chicken Fajita Special', this)" class="bg-red-600 hover:bg-red-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold shadow-lg shadow-red-600/30 flex items-center space-x-1">
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="font-black text-red-500 text-base">Rs. 1700</span>
+                            <button onclick="addToCart('Chicken Fajita Special', this)" class="gradient-hot hover:opacity-90 text-white text-xs px-4 py-2 rounded-xl font-bold shadow-lg glow-red flex items-center space-x-1 active:scale-95 transition">
                                 <i class="fa-solid fa-plus text-[10px]"></i><span>Add</span>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Fast Food 1: Zinger Burger -->
-                <div class="glass p-3 rounded-2xl border border-slate-800 flex space-x-3 items-center hover:border-red-600/50 transition relative">
-                    <button onclick="toggleWishlist('Crispy Zinger Burger', this)" class="absolute top-2 right-2 text-slate-400 hover:text-red-500 text-sm z-10 bg-slate-900/60 p-1.5 rounded-full"><i class="fa-regular fa-heart"></i></button>
-                    <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 object-cover rounded-xl shadow">
+                <!-- Item 3 -->
+                <div class="glass-card p-3.5 rounded-3xl border border-slate-800/80 flex space-x-3.5 items-center hover:border-red-500/40 transition relative">
+                    <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80" class="w-24 h-24 object-cover rounded-2xl shadow-lg">
                     <div class="flex-1">
-                        <div class="flex justify-between items-start pr-6">
-                            <h4 class="font-bold text-white text-sm">Crispy Zinger Burger</h4>
-                            <span class="text-[10px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded font-bold">Popular</span>
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-black text-white text-sm">Crispy Zinger Burger</h4>
+                            <span class="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-black">HOT</span>
                         </div>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Crispy fried chicken fillet, mayo, cheese</p>
-                        <select class="size-select text-[11px] border border-slate-700 bg-slate-800 text-slate-200 rounded-lg mt-1 p-1 w-full focus:outline-none">
+                        <p class="text-[11px] text-slate-400 mt-1">Crispy fried chicken fillet, mayo, cheese</p>
+                        <select class="size-select text-[11px] border border-slate-700 bg-slate-900 text-slate-200 rounded-xl mt-2 p-1.5 w-full focus:outline-none">
                             <option value="Single Burger" data-price="550">Single Burger - Rs. 550</option>
                             <option value="Zinger Meal (+Fries & Drink)" data-price="850">Zinger Meal - Rs. 850</option>
                         </select>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="font-black text-red-500 text-sm item-price">Rs. 550</span>
-                            <button onclick="addToCart('Crispy Zinger Burger', this)" class="bg-red-600 hover:bg-red-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold shadow-lg shadow-red-600/30 flex items-center space-x-1">
-                                <i class="fa-solid fa-plus text-[10px]"></i><span>Add</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Fast Food 2: Chicken Wrap -->
-                <div class="glass p-3 rounded-2xl border border-slate-800 flex space-x-3 items-center hover:border-red-600/50 transition relative">
-                    <button onclick="toggleWishlist('Grilled Chicken Wrap', this)" class="absolute top-2 right-2 text-slate-400 hover:text-red-500 text-sm z-10 bg-slate-900/60 p-1.5 rounded-full"><i class="fa-regular fa-heart"></i></button>
-                    <img src="https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 object-cover rounded-xl shadow">
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start pr-6">
-                            <h4 class="font-bold text-white text-sm">Grilled Chicken Wrap</h4>
-                            <span class="text-[10px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded font-bold">New</span>
-                        </div>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Tortilla wrap, grilled chicken strips, spicy sauce</p>
-                        <select class="size-select text-[11px] border border-slate-700 bg-slate-800 text-slate-200 rounded-lg mt-1 p-1 w-full focus:outline-none">
-                            <option value="Standard Wrap" data-price="480">Standard Wrap - Rs. 480</option>
-                        </select>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="font-black text-red-500 text-sm item-price">Rs. 480</span>
-                            <button onclick="addToCart('Grilled Chicken Wrap', this)" class="bg-red-600 hover:bg-red-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold shadow-lg shadow-red-600/30 flex items-center space-x-1">
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="font-black text-red-500 text-base">Rs. 550</span>
+                            <button onclick="addToCart('Crispy Zinger Burger', this)" class="gradient-hot hover:opacity-90 text-white text-xs px-4 py-2 rounded-xl font-bold shadow-lg glow-red flex items-center space-x-1 active:scale-95 transition">
                                 <i class="fa-solid fa-plus text-[10px]"></i><span>Add</span>
                             </button>
                         </div>
@@ -312,21 +276,21 @@
             </div>
         </div>
 
-        <!-- SCREEN 2: HALF-&-HALF BUILDER -->
+        <!-- SCREEN 2: BUILDER -->
         <div id="screen-builder" class="app-screen space-y-4">
-            <div class="glass p-4 rounded-2xl border border-slate-800">
-                <div class="flex items-center space-x-2 mb-3">
-                    <div class="bg-orange-600/20 p-2 rounded-xl text-orange-400"><i class="fa-solid fa-wand-magic-sparkles text-lg"></i></div>
+            <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="gradient-gold p-3 rounded-2xl text-slate-950 font-black"><i class="fa-solid fa-pizza-slice text-xl"></i></div>
                     <div>
-                        <h3 class="font-bold text-white text-sm">Half-&-Half Custom Pizza</h3>
-                        <p class="text-[11px] text-slate-400">Mix 2 flavors in 1 single pizza!</p>
+                        <h3 class="font-black text-white text-base">Half-&-Half Pizza Builder</h3>
+                        <p class="text-xs text-slate-400">Combine 2 flavors on 1 pizza</p>
                     </div>
                 </div>
                 
-                <div class="space-y-3">
+                <div class="space-y-3.5">
                     <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Left Half Flavor:</label>
-                        <select id="half-left" class="w-full border border-slate-700 bg-slate-800 text-slate-200 rounded-xl p-2.5 text-xs mt-1 focus:outline-none">
+                        <label class="text-[10px] font-black text-amber-400 uppercase tracking-widest">Left Side Flavor</label>
+                        <select id="half-left" class="w-full border border-slate-700/80 bg-slate-900 text-slate-200 rounded-2xl p-3 text-xs mt-1 focus:outline-none">
                             <option value="Chicken Fajita">Chicken Fajita</option>
                             <option value="Super Supreme">Super Supreme</option>
                             <option value="BBQ Tikka">BBQ Tikka</option>
@@ -334,8 +298,8 @@
                     </div>
 
                     <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Right Half Flavor:</label>
-                        <select id="half-right" class="w-full border border-slate-700 bg-slate-800 text-slate-200 rounded-xl p-2.5 text-xs mt-1 focus:outline-none">
+                        <label class="text-[10px] font-black text-amber-400 uppercase tracking-widest">Right Side Flavor</label>
+                        <select id="half-right" class="w-full border border-slate-700/80 bg-slate-900 text-slate-200 rounded-2xl p-3 text-xs mt-1 focus:outline-none">
                             <option value="Veggie Supreme">Veggie Supreme</option>
                             <option value="Cheese Lover">Cheese Lover</option>
                             <option value="Pepperoni Passion">Pepperoni Passion</option>
@@ -343,52 +307,53 @@
                     </div>
 
                     <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Crust Type:</label>
-                        <select id="build-dough" class="w-full border border-slate-700 bg-slate-800 text-slate-200 rounded-xl p-2.5 text-xs mt-1 focus:outline-none">
+                        <label class="text-[10px] font-black text-amber-400 uppercase tracking-widest">Crust Style</label>
+                        <select id="build-dough" class="w-full border border-slate-700/80 bg-slate-900 text-slate-200 rounded-2xl p-3 text-xs mt-1 focus:outline-none">
                             <option value="Regular Crust (Rs. 1800)">Medium Regular Crust - Rs. 1800</option>
                             <option value="Cheese Stuffed Crust (Rs. 2100)">Medium Stuffed Crust - Rs. 2100</option>
                         </select>
                     </div>
 
-                    <button onclick="addHalfPizza()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-red-600/30 mt-2">
-                        <i class="fa-solid fa-cart-plus mr-1"></i> Add Half-&-Half to Cart
+                    <button onclick="addHalfPizza()" class="w-full gradient-hot text-white font-black py-3.5 rounded-2xl text-xs shadow-xl glow-red mt-2 active:scale-95 transition">
+                        <i class="fa-solid fa-cart-plus mr-1.5"></i> Add Custom Pizza To Cart
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- SCREEN 3: CART & CHECKOUT -->
+        <!-- SCREEN 3: CART -->
         <div id="screen-cart" class="app-screen space-y-4">
-            <div class="glass p-4 rounded-2xl border border-slate-800">
-                <h3 class="font-bold text-white text-sm mb-3 flex items-center justify-between">
-                    <span>🛒 Your Cart</span>
-                    <span id="item-count-badge" class="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded-full font-bold">0 Items</span>
+            <div class="glass-card p-5 rounded-3xl border border-slate-800">
+                <h3 class="font-black text-white text-base mb-4 flex items-center justify-between">
+                    <span>🛒 Checkout Cart</span>
+                    <span id="item-count-badge" class="text-[10px] bg-red-600 text-white px-2.5 py-1 rounded-full font-bold">0 Items</span>
                 </h3>
-                <div id="cart-items" class="divide-y divide-slate-800 text-xs mb-4 max-h-48 overflow-y-auto">
+
+                <div id="cart-items" class="divide-y divide-slate-800/80 text-xs mb-4 max-h-48 overflow-y-auto">
                     <p class="text-slate-500 text-center py-6">Your cart is empty.</p>
                 </div>
 
-                <div class="flex space-x-2 mb-3">
-                    <input type="text" id="coupon-code" placeholder="Promo (CRUST10)" class="border border-slate-700 bg-slate-800 text-white rounded-xl px-3 py-2 text-xs w-full uppercase focus:outline-none">
-                    <button onclick="applyCoupon()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Apply</button>
+                <div class="flex space-x-2 mb-4">
+                    <input type="text" id="coupon-code" placeholder="Promo Code (CRUST10)" class="border border-slate-700/80 bg-slate-900 text-white rounded-2xl px-3.5 py-2.5 text-xs w-full uppercase focus:outline-none">
+                    <button onclick="applyCoupon()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2.5 rounded-2xl text-xs font-bold">Apply</button>
                 </div>
 
-                <div class="border-t border-slate-800 pt-3 text-xs space-y-1.5 mb-4">
+                <div class="border-t border-slate-800 pt-3 text-xs space-y-2 mb-4">
                     <div class="flex justify-between text-slate-400"><span>Subtotal:</span><span id="subtotal" class="text-white font-semibold">Rs. 0</span></div>
                     <div class="flex justify-between text-slate-400"><span>Delivery Fee:</span><span id="delivery-fee" class="text-yellow-400 font-semibold">Rs. 0</span></div>
                     <div class="flex justify-between text-slate-400"><span>Discount:</span><span id="discount" class="text-green-400 font-semibold">Rs. 0</span></div>
-                    <div class="flex justify-between text-sm font-black text-white border-t border-slate-800 pt-2"><span>Grand Total:</span><span id="grand-total" class="text-red-500">Rs. 0</span></div>
+                    <div class="flex justify-between text-base font-black text-white border-t border-slate-800 pt-2"><span>Total Amount:</span><span id="grand-total" class="text-red-500">Rs. 0</span></div>
                 </div>
 
-                <div class="space-y-2.5">
-                    <h4 class="font-bold text-[11px] text-slate-400 uppercase">Delivery Details</h4>
-                    <input type="text" id="cust-name" placeholder="Full Name" class="w-full border border-slate-700 bg-slate-800 text-white rounded-xl p-2.5 text-xs focus:outline-none">
-                    <input type="text" id="cust-phone" placeholder="Active Phone Number" class="w-full border border-slate-700 bg-slate-800 text-white rounded-xl p-2.5 text-xs focus:outline-none">
-                    <textarea id="cust-address" placeholder="Delivery Address" class="w-full border border-slate-700 bg-slate-800 text-white rounded-xl p-2.5 text-xs focus:outline-none" rows="2"></textarea>
+                <div class="space-y-3">
+                    <h4 class="font-black text-[11px] text-amber-400 uppercase tracking-widest">Delivery Address</h4>
+                    <input type="text" id="cust-name" placeholder="Full Name" class="w-full border border-slate-700/80 bg-slate-900 text-white rounded-2xl p-3 text-xs focus:outline-none">
+                    <input type="text" id="cust-phone" placeholder="Active Phone Number" class="w-full border border-slate-700/80 bg-slate-900 text-white rounded-2xl p-3 text-xs focus:outline-none">
+                    <textarea id="cust-address" placeholder="Full Address" class="w-full border border-slate-700/80 bg-slate-900 text-white rounded-2xl p-3 text-xs focus:outline-none" rows="2"></textarea>
                     
-                    <button onclick="checkoutWhatsApp()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3.5 rounded-xl shadow-xl shadow-green-600/30 flex items-center justify-center space-x-2 text-xs">
+                    <button onclick="checkoutWhatsApp()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-2xl shadow-xl flex items-center justify-center space-x-2 text-xs active:scale-95 transition">
                         <i class="fa-brands fa-whatsapp text-lg"></i>
-                        <span>Confirm Order via WhatsApp</span>
+                        <span>Order via WhatsApp Now</span>
                     </button>
                 </div>
             </div>
@@ -396,42 +361,38 @@
 
         <!-- SCREEN 4: TRACKING -->
         <div id="screen-tracking" class="app-screen space-y-4">
-            <div class="glass p-4 rounded-2xl border border-slate-800">
-                <h3 class="font-bold text-white text-sm mb-1 flex items-center space-x-2">
-                    <i class="fa-solid fa-location-crosshairs text-red-500"></i>
-                    <span>Live Order Tracking</span>
+            <div class="glass-card p-5 rounded-3xl border border-slate-800">
+                <h3 class="font-black text-white text-base mb-2 flex items-center space-x-2">
+                    <i class="fa-solid fa-radar text-red-500"></i>
+                    <span>Live Order Tracker</span>
                 </h3>
-                <div class="flex space-x-2 my-3">
-                    <input type="text" id="track-id" placeholder="Enter Order ID" class="border border-slate-700 bg-slate-800 text-white rounded-xl p-2.5 text-xs w-full focus:outline-none">
-                    <button onclick="trackOrder()" class="bg-red-600 hover:bg-red-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold">Track</button>
+                <div class="flex space-x-2 my-4">
+                    <input type="text" id="track-id" placeholder="Enter Order ID" class="border border-slate-700/80 bg-slate-900 text-white rounded-2xl p-3 text-xs w-full focus:outline-none">
+                    <button onclick="trackOrder()" class="gradient-hot text-white px-5 py-3 rounded-2xl text-xs font-bold">Track</button>
                 </div>
-                <div id="tracking-result" class="hidden space-y-3 bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-xs">
-                    <div class="flex items-center space-x-3 text-green-400"><i class="fa-solid fa-circle-check"></i><span class="font-bold">Order Received</span></div>
-                    <div class="flex items-center space-x-3 text-yellow-400"><i class="fa-solid fa-fire-burner animate-spin"></i><span class="font-bold">Preparing in Kitchen</span></div>
+                <div id="tracking-result" class="hidden space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs">
+                    <div class="flex items-center space-x-3 text-green-400 font-bold"><i class="fa-solid fa-circle-check"></i><span>Order Accepted</span></div>
+                    <div class="flex items-center space-x-3 text-yellow-400 font-bold"><i class="fa-solid fa-fire-burner animate-spin"></i><span>Kitchen Preparing</span></div>
                 </div>
             </div>
         </div>
 
         <!-- SCREEN 5: ADMIN -->
         <div id="screen-admin" class="app-screen space-y-4">
-            <div class="glass p-4 rounded-2xl border border-slate-800 space-y-3">
-                <h3 class="font-bold text-white text-sm">📊 Kitchen Dashboard</h3>
-                <div id="admin-orders-list" class="space-y-2 text-xs"></div>
+            <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-3">
+                <h3 class="font-black text-white text-base"> Kitchen Admin Control</h3>
+                <div id="admin-orders-list" class="space-y-2 text-xs">No active kitchen orders.</div>
             </div>
         </div>
 
-        <div id="screen-table" class="app-screen space-y-4"><div class="glass p-4 rounded-2xl text-center text-xs">Table Reservation Active</div></div>
-        <div id="screen-refer" class="app-screen space-y-4"><div class="glass p-4 rounded-2xl text-center text-xs">Referral Program Active</div></div>
-
     </main>
 
-    <!-- MODERN SPIN WHEEL MODAL WITH LABELS -->
-    <div id="spin-modal" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center hidden p-4 backdrop-blur-sm">
-        <div class="glass p-6 rounded-3xl border border-slate-700 text-center max-w-xs w-full space-y-4 relative">
-            <h3 class="font-black text-lg text-white">SPIN & WIN DEALS</h3>
-            <p class="text-[11px] text-slate-300">Tap below to spin for instant discount coupons!</p>
+    <!-- SPIN WHEEL MODAL -->
+    <div id="spin-modal" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center hidden p-4 backdrop-blur-md">
+        <div class="glass-card p-6 rounded-3xl border border-slate-700 text-center max-w-xs w-full space-y-4 relative">
+            <h3 class="font-black text-xl text-white">SPIN & WIN DEALS</h3>
+            <p class="text-xs text-slate-300">Tap below to spin for instant discount coupons!</p>
             
-            <!-- Dynamic Wheel Graphic with Slice Labels -->
             <div class="wheel-container">
                 <div class="wheel-pointer"></div>
                 <div id="modern-wheel" class="wheel-disc">
@@ -443,7 +404,7 @@
                     <div class="wheel-label label-6">5% OFF</div>
 
                     <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="w-10 h-10 bg-slate-900 border-2 border-yellow-400 rounded-full flex items-center justify-center z-20 shadow-lg">
+                        <div class="w-10 h-10 bg-slate-950 border-2 border-yellow-400 rounded-full flex items-center justify-center z-20 shadow-xl">
                             <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
                         </div>
                     </div>
@@ -452,38 +413,38 @@
 
             <div id="spin-result" class="text-yellow-300 font-bold text-sm min-h-[20px]"></div>
 
-            <button onclick="spinModernWheel()" id="spin-btn" class="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 font-black py-3 rounded-2xl text-xs shadow-xl active:scale-95 transition">
+            <button onclick="spinModernWheel()" id="spin-btn" class="w-full gradient-gold text-slate-950 font-black py-3.5 rounded-2xl text-xs shadow-xl active:scale-95 transition">
                 SPIN WHEEL NOW
             </button>
-            <button onclick="document.getElementById('spin-modal').classList.add('hidden')" class="text-slate-400 text-xs hover:text-white underline">Close</button>
+            <button onclick="document.getElementById('spin-modal').classList.add('hidden')" class="text-slate-400 text-xs hover:text-white underline block mx-auto">Close</button>
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
-    <nav class="glass bottom-nav border-t border-slate-800 px-4 py-2.5 shadow-2xl">
+    <!-- Bottom Navigation Bar -->
+    <nav class="glass-nav fixed bottom-0 left-0 right-0 max-w-md mx-auto px-4 py-3 z-50 flex justify-around items-center border-t border-slate-800">
         <button onclick="switchTab('home')" id="nav-home" class="text-red-500 flex flex-col items-center text-[10px] font-bold flex-1">
-            <i class="fa-solid fa-house text-base"></i><span>Menu</span>
+            <i class="fa-solid fa-utensils text-lg mb-1"></i><span>Menu</span>
         </button>
         <button onclick="switchTab('builder')" id="nav-builder" class="text-slate-400 flex flex-col items-center text-[10px] font-medium flex-1">
-            <i class="fa-solid fa-wand-magic-sparkles text-base"></i><span>Builder</span>
+            <i class="fa-solid fa-sliders text-lg mb-1"></i><span>Builder</span>
         </button>
         <button onclick="switchTab('cart')" id="nav-cart" class="text-slate-400 flex flex-col items-center text-[10px] font-medium relative flex-1">
-            <i class="fa-solid fa-cart-shopping text-base"></i><span>Cart</span>
+            <i class="fa-solid fa-cart-shopping text-lg mb-1"></i><span>Cart</span>
             <span id="nav-badge" class="absolute -top-1 right-5 bg-red-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">0</span>
         </button>
         <button onclick="switchTab('tracking')" id="nav-tracking" class="text-slate-400 flex flex-col items-center text-[10px] font-medium flex-1">
-            <i class="fa-solid fa-location-crosshairs text-base"></i><span>Track</span>
+            <i class="fa-solid fa-location-arrow text-lg mb-1"></i><span>Track</span>
         </button>
     </nav>
 
-    <!-- JavaScript Logic -->
+    <!-- App Logic -->
     <script>
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.opacity = '0';
                 setTimeout(() => splash.remove(), 500);
-            }, 1200);
+            }, 1000);
         });
 
         let cart = [];
@@ -494,11 +455,11 @@
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = `bg-green-600 text-white text-xs font-bold px-4 py-3 rounded-2xl shadow-xl flex items-center justify-between transition transform translate-y-2 opacity-0`;
-            toast.innerHTML = `<span>${message}</span><i class="fa-solid fa-circle-check text-sm ml-2"></i>`;
+            toast.className = `glass-card border border-green-500/50 text-white text-xs font-bold px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between transition transform translate-y-2 opacity-0`;
+            toast.innerHTML = `<span>${message}</span><i class="fa-solid fa-circle-check text-green-400 text-sm ml-2"></i>`;
             container.appendChild(toast);
             setTimeout(() => { toast.style.transform = 'translateY(0)'; toast.style.opacity = '1'; }, 50);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
         }
 
         function switchTab(tabId) {
@@ -553,9 +514,9 @@
             cart.forEach((item, index) => {
                 subtotal += item.price;
                 container.innerHTML += `
-                    <div class="py-2 flex justify-between items-center">
-                        <div><b class="text-white">${item.name}</b><br><span class="text-[10px] text-slate-400">${item.size} - Rs. ${item.price}</span></div>
-                        <button onclick="cart.splice(${index},1);updateCartUI()" class="text-red-400 font-bold text-xs"><i class="fa-solid fa-trash"></i></button>
+                    <div class="py-2.5 flex justify-between items-center">
+                        <div><b class="text-white text-xs">${item.name}</b><br><span class="text-[10px] text-slate-400">${item.size} - Rs. ${item.price}</span></div>
+                        <button onclick="cart.splice(${index},1);updateCartUI()" class="text-red-400 font-bold text-xs p-1"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
                 `;
             });
@@ -568,9 +529,7 @@
             document.getElementById('grand-total').innerText = `Rs. ${total}`;
         }
 
-        function openSpinWheel() {
-            document.getElementById('spin-modal').classList.remove('hidden');
-        }
+        function openSpinWheel() { document.getElementById('spin-modal').classList.remove('hidden'); }
 
         function spinModernWheel() {
             if(isSpinning) return;
@@ -582,7 +541,6 @@
             btn.disabled = true;
             res.innerText = "Spinning...";
 
-            // Rotation angle targeted specifically for 15% OFF slice
             const targetRotation = 3600 + 210; 
             wheel.style.transform = `rotate(${targetRotation}deg)`;
 
@@ -608,7 +566,7 @@
             const branch = document.getElementById('branch-select').value;
 
             if(!name || !phone || !address || cart.length === 0) {
-                showToast('Fill all details & add items!');
+                showToast('Please complete all details!');
                 return;
             }
 
@@ -647,8 +605,7 @@
                 showToast('10% Coupon Applied!');
             }
         }
-        function toggleWishlist(name, btn) { showToast(`Saved ${name} to Wishlist!`); }
         function filterMenu(cat) { showToast(`Showing: ${cat.toUpperCase()}`); }
     </script>
 </body>
-</html>
+</html> 
