@@ -1,524 +1,544 @@
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Crust Pizza - Ultimate Super App</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { red: '#ef4444', gold: '#f59e0b', dark: '#0b0f19', cardDark: '#1e293b' }
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Crust Pizza App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Leaflet CSS for Map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s, color 0.3s; }
-        .app-screen { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
-        .app-screen.active { display: block; opacity: 1; }
-        
-        .dark .glass-card {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.85));
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-        .light .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        :root {
+            --primary: #ff3838;
+            --primary-dark: #c51111;
+            --accent: #ff9f1a;
+            --bg: #f8f9fa;
+            --surface: #ffffff;
+            --text-dark: #1e272e;
+            --text-muted: #808e9b;
+            --radius: 16px;
         }
 
-        .dark .glass-nav { background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(20px); border-top: 1px solid rgba(255, 255, 255, 0.1); }
-        .light .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border-top: 1px solid rgba(0, 0, 0, 0.1); }
-
-        .glow-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.35); }
-        .gradient-hot { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
-        .gradient-gold { background: linear-gradient(135deg, #f59e0b, #d97706); }
-
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        #map { height: 180px; width: 100%; border-radius: 1rem; z-index: 1; }
-
-        /* Interactive Visual Pizza Canvas */
-        .pizza-base {
-            width: 140px; height: 140px; border-radius: 50%;
-            background: #d97706; border: 8px solid #b45309;
-            position: relative; transition: all 0.3s ease;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-        .pizza-cheese {
-            position: absolute; inset: 4px; border-radius: 50%;
-            background: #facc15; transition: all 0.3s ease;
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            padding-bottom: 80px; /* Space for bottom nav */
         }
-        .topping {
-            position: absolute; width: 14px; height: 14px; border-radius: 50%; transition: transform 0.2s;
+
+        /* Top App Header */
+        .app-header {
+            background: var(--surface);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        .top-pepperoni { background: #dc2626; border: 1px solid #991b1b; }
-        .top-mushroom { background: #78716c; border-radius: 4px; }
-        .top-olives { background: #000000; border: 2px solid #334155; }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .brand i {
+            font-size: 1.4rem;
+        }
+
+        .cart-icon-btn {
+            position: relative;
+            background: var(--bg);
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero / Banner */
+        .promo-banner {
+            margin: 15px 20px;
+            background: linear-gradient(135deg, #ff3838, #ff9f1a);
+            border-radius: var(--radius);
+            padding: 20px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 56, 56, 0.2);
+        }
+
+        .promo-banner h2 { font-size: 1.4rem; margin-bottom: 4px; }
+        .promo-banner p { font-size: 0.85rem; opacity: 0.9; }
+
+        /* Category Filter Tabs (Horizontal Scroll) */
+        .categories-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 5px 20px 15px;
+            scrollbar-width: none;
+        }
+
+        .categories-container::-webkit-scrollbar { display: none; }
+
+        .cat-chip {
+            background: var(--surface);
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+            border: 1px solid #e1e8ef;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .cat-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(255, 56, 56, 0.3);
+        }
+
+        /* Products Grid */
+        .section-title {
+            padding: 0 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            padding: 0 20px;
+        }
+
+        .product-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .product-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .product-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .price {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--primary);
+        }
+
+        .add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Cart Drawer Slide Up */
+        .cart-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            display: none;
+            align-items: flex-end;
+        }
+
+        .cart-modal.active { display: flex; }
+
+        .cart-content {
+            background: var(--surface);
+            width: 100%;
+            border-radius: 24px 24px 0 0;
+            padding: 20px;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qty-btn {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            background: var(--surface);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Form Inputs */
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e1e8ef;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .checkout-btn {
+            background: #25d366;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0; right: 0;
+            background: var(--surface);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            z-index: 99;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            gap: 4px;
+        }
+
+        .nav-item.active { color: var(--primary); font-weight: 600; }
+        .nav-item i { font-size: 1.2rem; }
+
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 dark:bg-slate-950 dark:text-slate-100 light:bg-slate-50 light:text-slate-900 max-w-md mx-auto min-h-screen relative border-x border-slate-800/80 shadow-2xl pb-24">
+<body>
 
-    <!-- Toast Notifications -->
-    <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-11/12 max-w-sm space-y-2 pointer-events-none"></div>
-
-    <!-- App Header -->
-    <header class="sticky top-0 z-40 px-4 py-3.5 flex justify-between items-center glass-nav border-b border-slate-800">
-        <div class="flex items-center space-x-3" onclick="switchTab('home')">
-            <div class="bg-gradient-to-tr from-red-600 to-orange-500 p-2.5 rounded-2xl text-white glow-red">
-                <i class="fa-solid fa-pizza-slice text-lg"></i>
-            </div>
-            <div>
-                <h1 class="font-black text-lg tracking-wide text-white dark:text-white light:text-slate-900 leading-tight">CRUST PIZZA</h1>
-                <div class="flex items-center space-x-1 text-yellow-400 text-[11px] font-bold">
-                    <i class="fa-solid fa-location-dot text-[10px]"></i>
-                    <select id="branch-select" class="bg-transparent border-none text-yellow-400 font-bold focus:outline-none cursor-pointer">
-                        <option value="Astore Main" class="bg-slate-900 text-white">Astore Main Branch</option>
-                        <option value="Eidgah Branch" class="bg-slate-900 text-white">Astore Eidgah (+Rs. 100)</option>
-                    </select>
-                </div>
-            </div>
+    <!-- App Bar -->
+    <div class="app-header">
+        <div class="brand">
+            <i class="fa-solid fa-pizza-slice"></i>
+            <span>Crust Pizza</span>
         </div>
-        <div class="flex items-center space-x-2">
-            <!-- Language Toggle -->
-            <button onclick="toggleLanguage()" class="bg-slate-800/80 text-amber-400 px-2 py-1.5 rounded-xl text-[10px] font-bold border border-slate-700">
-                <span id="lang-btn-text">اردو</span>
+        <button class="cart-icon-btn" onclick="toggleCart()">
+            <i class="fa-solid fa-basket-shopping"></i>
+            <span class="cart-badge" id="cartCount">0</span>
+        </button>
+    </div>
+
+    <!-- Promo Banner -->
+    <div class="promo-banner">
+        <h2>20% OFF Your First Order!</h2>
+        <p>Use Code: <b>CRUST20</b> at WhatsApp checkout.</p>
+    </div>
+
+    <!-- Categories Tab Switcher -->
+    <div class="categories-container">
+        <div class="cat-chip active" onclick="filterCategory('all', this)">🔥 Deals</div>
+        <div class="cat-chip" onclick="filterCategory('pizza', this)">🍕 Pizzas</div>
+        <div class="cat-chip" onclick="filterCategory('burger', this)">🍔 Burgers</div>
+        <div class="cat-chip" onclick="filterCategory('sides', this)">🍟 Fries & Sides</div>
+        <div class="cat-chip" onclick="filterCategory('drinks', this)">🥤 Drinks</div>
+    </div>
+
+    <!-- Products List -->
+    <h3 class="section-title">Popular Items</h3>
+    <div class="products-grid" id="productList">
+        <!-- Products generated dynamically via JS -->
+    </div>
+
+    <!-- Cart Drawer Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h3>Your Cart</h3>
+                <i class="fa-solid fa-xmark" style="font-size:1.4rem; cursor:pointer;" onclick="toggleCart()"></i>
+            </div>
+            
+            <div id="cartItems">
+                <p style="text-align: center; color: var(--text-muted); margin: 20px 0;">Cart is empty!</p>
+            </div>
+
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+            
+            <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 15px;">
+                <span>Total Amount:</span>
+                <span id="cartTotal">Rs. 0</span>
+            </div>
+
+            <!-- Customer Details -->
+            <input type="text" id="custName" class="form-control" placeholder="Your Name">
+            <input type="tel" id="custPhone" class="form-control" placeholder="Mobile Number">
+            <textarea id="custAddress" class="form-control" rows="2" placeholder="Full Delivery Address"></textarea>
+
+            <button class="checkout-btn" onclick="sendOrder()">
+                <i class="fa-brands fa-whatsapp" style="font-size:1.3rem;"></i> Confirm Order via WhatsApp
             </button>
-            <!-- Loyalty Coins Widget -->
-            <div class="bg-amber-500/10 border border-amber-500/30 text-yellow-400 px-2 py-1.5 rounded-xl text-xs font-black flex items-center space-x-1">
-                <i class="fa-solid fa-coins text-amber-400"></i>
-                <span id="user-coins">120</span>
-            </div>
-            <!-- Theme Toggle -->
-            <button onclick="toggleTheme()" class="bg-slate-800/80 text-slate-300 p-2 rounded-xl text-xs border border-slate-700">
-                <i id="theme-icon" class="fa-solid fa-sun text-yellow-400"></i>
-            </button>
         </div>
-    </header>
+    </div>
 
-    <!-- Main Content -->
-    <main class="p-4 space-y-4">
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-item" onclick="toggleCart()">
+            <i class="fa-solid fa-utensils"></i>
+            <span>Cart</span>
+        </a>
+        <a href="tel:03000000000" class="nav-item">
+            <i class="fa-solid fa-phone"></i>
+            <span>Call Us</span>
+        </a>
+    </div>
 
-        <!-- SCREEN 1: HOME -->
-        <div id="screen-home" class="app-screen active space-y-4">
-
-            <!-- AI Voice Assistant & Quick Actions -->
-            <div class="glass-card p-3 rounded-2xl border border-slate-800 flex justify-between items-center space-x-2">
-                <div class="flex items-center space-x-2.5 flex-1">
-                    <button onclick="startVoiceAssistant()" class="bg-red-600 hover:bg-red-500 text-white p-2.5 rounded-xl glow-red active:scale-95 transition">
-                        <i class="fa-solid fa-microphone text-sm"></i>
-                    </button>
-                    <div>
-                        <div class="text-[11px] font-black text-white" id="lbl-voice">Voice Assistant</div>
-                        <div class="text-[9px] text-slate-400" id="voice-status">Tap mic & speak your order...</div>
-                    </div>
-                </div>
-                <button onclick="quickReorder()" class="bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 text-[10px] font-black px-3 py-2 rounded-xl flex items-center space-x-1 active:scale-95">
-                    <i class="fa-solid fa-rotate-right"></i>
-                    <span>Re-Order</span>
-                </button>
-            </div>
-
-            <!-- Group Order & Gift Meal Section -->
-            <div class="grid grid-cols-2 gap-2">
-                <button onclick="openGroupOrder()" class="glass-card p-3 rounded-2xl border border-blue-500/30 flex items-center space-x-2 text-left active:scale-95">
-                    <div class="bg-blue-500/20 p-2 rounded-xl text-blue-400"><i class="fa-solid fa-users text-xs"></i></div>
-                    <div>
-                        <div class="text-[11px] font-black text-white">Group Order</div>
-                        <div class="text-[9px] text-slate-400">Split Bill with Friends</div>
-                    </div>
-                </button>
-                <button onclick="openGiftModal()" class="glass-card p-3 rounded-2xl border border-pink-500/30 flex items-center space-x-2 text-left active:scale-95">
-                    <div class="bg-pink-500/20 p-2 rounded-xl text-pink-400"><i class="fa-solid fa-gift text-xs"></i></div>
-                    <div>
-                        <div class="text-[11px] font-black text-white">Gift a Meal</div>
-                        <div class="text-[9px] text-slate-400">Send to Friends/Family</div>
-                    </div>
-                </button>
-            </div>
-
-            <!-- AI Smart Recommendation -->
-            <div class="glass-card p-4 rounded-3xl border border-amber-500/30 relative overflow-hidden">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2">
-                        <div class="bg-amber-400/10 p-2 rounded-xl text-yellow-400"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                        <div>
-                            <h3 class="text-xs font-black text-white uppercase tracking-wider">AI Recommendation</h3>
-                            <p class="text-[10px] text-slate-400">Smart match for your budget</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex space-x-2 mt-3">
-                    <select id="ai-budget" class="bg-slate-900 text-slate-200 border border-slate-700/80 rounded-2xl text-xs p-3 flex-1 focus:outline-none">
-                        <option value="1500">Under Rs. 1500</option>
-                        <option value="2000" selected>Under Rs. 2000</option>
-                    </select>
-                    <button onclick="getAIRecommendation()" class="gradient-gold text-slate-950 font-black px-4 rounded-2xl text-xs flex items-center space-x-1 shadow-lg active:scale-95">
-                        <i class="fa-solid fa-bolt"></i><span>Suggest</span>
-                    </button>
-                </div>
-                <div id="ai-result" class="hidden mt-3 pt-3 border-t border-slate-800 text-xs text-yellow-300 font-bold flex justify-between items-center">
-                    <span id="ai-text"></span>
-                    <button id="ai-add-btn" onclick="addToCart('Chicken Fajita Special', this)" class="bg-red-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-bold">Add Now</button>
-                </div>
-            </div>
-
-            <!-- Products List with Nutrition Counters -->
-            <div class="space-y-3.5" id="product-list-container">
-                <div class="glass-card p-3.5 rounded-3xl border border-slate-800 flex space-x-3.5 items-center">
-                    <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80" class="w-24 h-24 object-cover rounded-2xl shadow-lg">
-                    <div class="flex-1">
-                        <h4 class="font-black text-white text-sm">Family Feast Combo</h4>
-                        <p class="text-[11px] text-slate-400 mt-0.5">2 Large Pizzas + 1.5L Drink</p>
-                        <!-- Nutrition Badge -->
-                        <div class="flex space-x-2 text-[9px] font-bold text-amber-400 mt-1">
-                            <span>🔥 1450 Cal</span>
-                            <span>🥩 45g Protein</span>
-                        </div>
-                        <select class="size-select text-[11px] border border-slate-700 bg-slate-900 text-slate-200 rounded-xl mt-2 p-1.5 w-full">
-                            <option value="Standard Deal" data-price="3800">Standard - Rs. 3800</option>
-                        </select>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="font-black text-red-500 text-base">Rs. 3800</span>
-                            <button onclick="addToCart('Family Feast Combo', this)" class="gradient-hot text-white text-xs px-4 py-2 rounded-xl font-bold glow-red active:scale-95">Add</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass-card p-3.5 rounded-3xl border border-slate-800 flex space-x-3.5 items-center">
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=300&q=80" class="w-24 h-24 object-cover rounded-2xl shadow-lg">
-                    <div class="flex-1">
-                        <h4 class="font-black text-white text-sm">Chicken Fajita Special</h4>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Spicy chicken, capsicum, mozzarella</p>
-                        <!-- Nutrition Badge -->
-                        <div class="flex space-x-2 text-[9px] font-bold text-amber-400 mt-1">
-                            <span>🔥 880 Cal</span>
-                            <span>🥩 32g Protein</span>
-                        </div>
-                        <select class="size-select text-[11px] border border-slate-700 bg-slate-900 text-slate-200 rounded-xl mt-2 p-1.5 w-full">
-                            <option value="Medium" data-price="1700">Medium - Rs. 1700</option>
-                            <option value="Large" data-price="2200">Large - Rs. 2200</option>
-                        </select>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="font-black text-red-500 text-base">Rs. 1700</span>
-                            <button onclick="addToCart('Chicken Fajita Special', this)" class="gradient-hot text-white text-xs px-4 py-2 rounded-xl font-bold glow-red active:scale-95">Add</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SCREEN 2: INTERACTIVE VISUAL BUILDER -->
-        <div id="screen-builder" class="app-screen space-y-4">
-            <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-4">
-                <h3 class="font-black text-white text-base">Interactive 3D Pizza Visualizer</h3>
-                
-                <!-- Live Visualizer Canvas Area -->
-                <div class="flex justify-center my-4">
-                    <div class="pizza-base flex items-center justify-center">
-                        <div id="cheese-layer" class="pizza-cheese"></div>
-                        <div id="toppings-layer" class="absolute inset-0"></div>
-                    </div>
-                </div>
-
-                <!-- Customizer Controls -->
-                <div class="space-y-3">
-                    <div>
-                        <label class="text-[10px] font-black text-amber-400 uppercase">Interactive Toppings</label>
-                        <div class="grid grid-cols-3 gap-2 mt-1">
-                            <button onclick="toggleTopping('pepperoni')" class="bg-slate-900 border border-slate-700 text-white text-[10px] font-bold py-2 rounded-xl">Pepperoni</button>
-                            <button onclick="toggleTopping('mushrooms')" class="bg-slate-900 border border-slate-700 text-white text-[10px] font-bold py-2 rounded-xl">Mushrooms</button>
-                            <button onclick="toggleTopping('olives')" class="bg-slate-900 border border-slate-700 text-white text-[10px] font-bold py-2 rounded-xl">Olives</button>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-black text-amber-400 uppercase">Extra Cheese Crust</label>
-                        <select onchange="updateCheeseCrust(this)" class="w-full border border-slate-700 bg-slate-900 text-slate-200 rounded-2xl p-3 text-xs mt-1">
-                            <option value="normal">Normal Cheese - Rs. 1800</option>
-                            <option value="extra">Double Extra Cheese - Rs. 2100</option>
-                        </select>
-                    </div>
-
-                    <button onclick="addVisualizerPizza()" class="w-full gradient-hot text-white font-black py-3.5 rounded-2xl text-xs glow-red mt-2 active:scale-95">
-                        Add Custom Visual Pizza To Cart
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- SCREEN 3: CART & CHECKOUT -->
-        <div id="screen-cart" class="app-screen space-y-4">
-            <div class="glass-card p-5 rounded-3xl border border-slate-800">
-                <h3 class="font-black text-white text-base mb-4 flex items-center justify-between">
-                    <span>🛒 Checkout Cart</span>
-                    <span id="item-count-badge" class="text-[10px] bg-red-600 text-white px-2.5 py-1 rounded-full font-bold">0 Items</span>
-                </h3>
-
-                <div id="cart-items" class="divide-y divide-slate-800 text-xs mb-4 max-h-48 overflow-y-auto">
-                    <p class="text-slate-500 text-center py-6">Your cart is empty.</p>
-                </div>
-
-                <!-- Payment Selection -->
-                <div class="p-3 bg-slate-900/80 rounded-2xl border border-slate-800 mb-4 space-y-2">
-                    <div class="text-xs font-bold text-amber-400">Payment Option</div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button onclick="setPayment('COD')" id="pay-cod" class="pay-btn active bg-red-600 text-white text-[10px] font-bold py-2 rounded-xl border border-red-500">Cash</button>
-                        <button onclick="setPayment('JazzCash')" id="pay-jazz" class="pay-btn bg-slate-800 text-slate-300 text-[10px] font-bold py-2 rounded-xl border border-slate-700">JazzCash</button>
-                        <button onclick="setPayment('EasyPaisa')" id="pay-easy" class="pay-btn bg-slate-800 text-slate-300 text-[10px] font-bold py-2 rounded-xl border border-slate-700">EasyPaisa</button>
-                    </div>
-                </div>
-
-                <div class="border-t border-slate-800 pt-3 text-xs space-y-2 mb-4">
-                    <div class="flex justify-between text-slate-400"><span>Subtotal:</span><span id="subtotal" class="text-white font-semibold">Rs. 0</span></div>
-                    <div class="flex justify-between text-base font-black text-white border-t border-slate-800 pt-2"><span>Total Bill:</span><span id="grand-total" class="text-red-500">Rs. 0</span></div>
-                </div>
-
-                <div class="space-y-3">
-                    <input type="text" id="cust-name" placeholder="Full Name" class="w-full border border-slate-700 bg-slate-900 text-white rounded-2xl p-3 text-xs">
-                    <input type="text" id="cust-phone" placeholder="Active Phone Number" class="w-full border border-slate-700 bg-slate-900 text-white rounded-2xl p-3 text-xs">
-                    <textarea id="cust-address" placeholder="Full Address" class="w-full border border-slate-700 bg-slate-900 text-white rounded-2xl p-3 text-xs" rows="2"></textarea>
-                    
-                    <button onclick="checkoutWhatsApp()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-2xl shadow-xl flex items-center justify-center space-x-2 text-xs active:scale-95">
-                        <i class="fa-brands fa-whatsapp text-lg"></i>
-                        <span>Place Order via WhatsApp</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- SCREEN 4: LIVE MAP TRACKING -->
-        <div id="screen-tracking" class="app-screen space-y-4">
-            <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-3">
-                <h3 class="font-black text-white text-base flex items-center space-x-2">
-                    <i class="fa-solid fa-location-crosshairs text-red-500 animate-pulse"></i>
-                    <span>Live GPS Delivery Map</span>
-                </h3>
-                
-                <div id="map"></div>
-
-                <div class="space-y-2 text-xs bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                    <div class="flex justify-between items-center text-slate-300">
-                        <span>Delivery Rider Status:</span>
-                        <span class="text-yellow-400 font-bold">On The Way</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SCREEN 5: KITCHEN POS DISPLAY SYSTEM -->
-        <div id="screen-kitchen" class="app-screen space-y-4">
-            <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-3">
-                <div class="flex justify-between items-center">
-                    <h3 class="font-black text-white text-base">👨‍🍳 Kitchen POS Screen</h3>
-                    <span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] px-2 py-0.5 rounded-full font-bold">LIVE SYNC</span>
-                </div>
-                
-                <div id="kitchen-orders" class="space-y-2.5">
-                    <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 flex justify-between items-center">
-                        <div>
-                            <div class="font-black text-xs text-white">Order #1029 - Fajita Medium</div>
-                            <div class="text-[10px] text-slate-400">Table / Address: Astore Main</div>
-                        </div>
-                        <button onclick="showToast('Order Status Updated to Baking!')" class="bg-amber-500 text-slate-950 text-[10px] font-black px-2.5 py-1.5 rounded-xl">Set Baking</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Bottom Nav Bar -->
-    <nav class="glass-nav fixed bottom-0 left-0 right-0 max-w-md mx-auto px-4 py-3 z-50 flex justify-around items-center border-t border-slate-800">
-        <button onclick="switchTab('home')" id="nav-home" class="text-red-500 flex flex-col items-center text-[10px] font-bold flex-1">
-            <i class="fa-solid fa-utensils text-lg mb-1"></i><span>Menu</span>
-        </button>
-        <button onclick="switchTab('builder')" id="nav-builder" class="text-slate-400 flex flex-col items-center text-[10px] font-medium flex-1">
-            <i class="fa-solid fa-sliders text-lg mb-1"></i><span>3D Pizza</span>
-        </button>
-        <button onclick="switchTab('cart')" id="nav-cart" class="text-slate-400 flex flex-col items-center text-[10px] font-medium relative flex-1">
-            <i class="fa-solid fa-cart-shopping text-lg mb-1"></i><span>Cart</span>
-            <span id="nav-badge" class="absolute -top-1 right-5 bg-red-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold">0</span>
-        </button>
-        <button onclick="switchTab('tracking')" id="nav-tracking" class="text-slate-400 flex flex-col items-center text-[10px] font-medium flex-1">
-            <i class="fa-solid fa-location-dot text-lg mb-1"></i><span>Map</span>
-        </button>
-        <button onclick="switchTab('kitchen')" id="nav-kitchen" class="text-slate-400 flex flex-col items-center text-[10px] font-medium flex-1">
-            <i class="fa-solid fa-fire-burner text-lg mb-1"></i><span>Kitchen POS</span>
-        </button>
-    </nav>
-
-    <!-- JavaScript Logic -->
+    <!-- App Logic JS -->
     <script>
-        let cart = [];
-        let selectedPayment = 'COD';
-        let isUrdu = false;
-        let map, riderMarker;
-        let activeToppings = [];
+        const products = [
+            { id: 1, category: 'pizza', name: 'Crust Special Pizza', price: 1299, desc: 'Loaded chicken, olives, bell peppers', img: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=300' },
+            { id: 2, category: 'pizza', name: 'Chicken Tikka Pizza', price: 1099, desc: 'Smokey chicken tikka & spicy toppings', img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=300' },
+            { id: 3, category: 'burger', name: 'Crispy Zinger', price: 450, desc: 'Crunchy chicken thigh patty & mayo', img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=300' },
+            { id: 4, category: 'sides', name: 'Cheese Loaded Fries', price: 350, desc: 'Fries topped with melted cheddar', img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?q=80&w=300' },
+            { id: 5, category: 'drinks', name: 'Cold Drink 1.5L', price: 180, desc: 'Chilled Pepsi / Seven Up', img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=300' }
+        ];
 
-        function toggleLanguage() {
-            isUrdu = !isUrdu;
-            document.getElementById('lang-btn-text').innerText = isUrdu ? "English" : "اردو";
-            document.getElementById('lbl-voice').innerText = isUrdu ? "وائس اسسٹنٹ" : "Voice Assistant";
-            showToast(isUrdu ? "زبان تبدیل ہو گئی ہے!" : "Language switched!");
+        let cart = {};
+
+        function renderProducts(items) {
+            const container = document.getElementById('productList');
+            container.innerHTML = '';
+            items.forEach(p => {
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div>
+                            <img src="${p.img}" alt="${p.name}">
+                            <div class="product-title">${p.name}</div>
+                            <div class="product-desc">${p.desc}</div>
+                        </div>
+                        <div class="product-footer">
+                            <span class="price">Rs. ${p.price}</span>
+                            <button class="add-btn" onclick="addToCart(${p.id})"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                html.classList.add('light');
-                icon.className = 'fa-solid fa-moon text-slate-700';
+        function filterCategory(cat, element) {
+            document.querySelectorAll('.cat-chip').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            
+            if (cat === 'all') {
+                renderProducts(products);
             } else {
-                html.classList.remove('light');
-                html.classList.add('dark');
-                icon.className = 'fa-solid fa-sun text-yellow-400';
+                const filtered = products.filter(p => p.category === cat);
+                renderProducts(filtered);
             }
         }
 
-        function showToast(message) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `glass-card border border-green-500/50 text-white text-xs font-bold px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between transition transform translate-y-2 opacity-0`;
-            toast.innerHTML = `<span>${message}</span><i class="fa-solid fa-circle-check text-green-400 text-sm ml-2"></i>`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.transform = 'translateY(0)'; toast.style.opacity = '1'; }, 50);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen-${tabId}`).classList.add('active');
-            if(tabId === 'tracking') setTimeout(initMap, 200);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function addToCart(name, btn) {
-            const container = btn.closest('.flex-1');
-            const sizeSelect = container.querySelector('.size-select');
-            const size = sizeSelect.value;
-            const price = parseInt(sizeSelect.options[sizeSelect.selectedIndex].getAttribute('data-price'));
-
-            cart.push({ name, size, price });
+        function addToCart(id) {
+            if (cart[id]) {
+                cart[id].qty += 1;
+            } else {
+                const prod = products.find(p => p.id === id);
+                cart[id] = { ...prod, qty: 1 };
+            }
             updateCartUI();
-            showToast(`Added ${name} to Cart!`);
         }
 
-        function toggleTopping(type) {
-            const layer = document.getElementById('toppings-layer');
-            const topEl = document.createElement('div');
-            topEl.className = `topping top-${type}`;
-            topEl.style.top = Math.random() * 80 + 20 + 'px';
-            topEl.style.left = Math.random() * 80 + 20 + 'px';
-            layer.appendChild(topEl);
-            activeToppings.push(type);
-            showToast(`Added Visual ${type.toUpperCase()} Topping!`);
-        }
-
-        function addVisualizerPizza() {
-            cart.push({ name: 'Custom Visualizer Pizza', size: 'Medium (Custom)', price: 1950 });
+        function updateQty(id, delta) {
+            if (cart[id]) {
+                cart[id].qty += delta;
+                if (cart[id].qty <= 0) delete cart[id];
+            }
             updateCartUI();
-            showToast('3D Visual Pizza Added To Cart!');
-            switchTab('cart');
         }
 
         function updateCartUI() {
-            const container = document.getElementById('cart-items');
-            document.getElementById('nav-badge').innerText = cart.length;
-            document.getElementById('item-count-badge').innerText = `${cart.length} Items`;
+            let totalItems = 0;
+            let totalPrice = 0;
+            const cartItemsDiv = document.getElementById('cartItems');
+            cartItemsDiv.innerHTML = '';
 
-            if(cart.length === 0) {
-                container.innerHTML = '<p class="text-slate-500 text-center py-6">Your cart is empty.</p>';
-                document.getElementById('subtotal').innerText = 'Rs. 0';
-                document.getElementById('grand-total').innerText = 'Rs. 0';
-                return;
+            const keys = Object.keys(cart);
+            if(keys.length === 0) {
+                cartItemsDiv.innerHTML = '<p style="text-align: center; color: var(--text-muted); margin: 20px 0;">Cart is empty!</p>';
             }
 
-            container.innerHTML = '';
-            let subtotal = 0;
-            cart.forEach((item, index) => {
-                subtotal += item.price;
-                container.innerHTML += `
-                    <div class="py-2.5 flex justify-between items-center">
-                        <div><b class="text-white text-xs">${item.name}</b><br><span class="text-[10px] text-slate-400">${item.size} - Rs. ${item.price}</span></div>
-                        <button onclick="cart.splice(${index},1);updateCartUI()" class="text-red-400 font-bold text-xs"><i class="fa-solid fa-trash-can"></i></button>
+            keys.forEach(id => {
+                const item = cart[id];
+                totalItems += item.qty;
+                totalPrice += item.price * item.qty;
+
+                cartItemsDiv.innerHTML += `
+                    <div class="cart-item">
+                        <div>
+                            <div style="font-weight:600; font-size:0.9rem;">${item.name}</div>
+                            <div style="font-size:0.8rem; color:var(--text-muted);">Rs. ${item.price} x ${item.qty}</div>
+                        </div>
+                        <div class="qty-controls">
+                            <button class="qty-btn" onclick="updateQty(${id}, -1)">-</button>
+                            <span>${item.qty}</span>
+                            <button class="qty-btn" onclick="updateQty(${id}, 1)">+</button>
+                        </div>
                     </div>
                 `;
             });
 
-            document.getElementById('subtotal').innerText = `Rs. ${subtotal}`;
-            document.getElementById('grand-total').innerText = `Rs. ${subtotal}`;
+            document.getElementById('cartCount').innerText = totalItems;
+            document.getElementById('cartTotal').innerText = `Rs. ${totalPrice}`;
         }
 
-        function setPayment(method) {
-            selectedPayment = method;
-            document.querySelectorAll('.pay-btn').forEach(btn => btn.className = 'pay-btn bg-slate-800 text-slate-300 text-[10px] font-bold py-2 rounded-xl border border-slate-700');
-            if(method === 'COD') document.getElementById('pay-cod').className = 'pay-btn active bg-red-600 text-white text-[10px] font-bold py-2 rounded-xl border border-red-500';
-            if(method === 'JazzCash') document.getElementById('pay-jazz').className = 'pay-btn active bg-red-600 text-white text-[10px] font-bold py-2 rounded-xl border border-red-500';
-            if(method === 'EasyPaisa') document.getElementById('pay-easy').className = 'pay-btn active bg-red-600 text-white text-[10px] font-bold py-2 rounded-xl border border-red-500';
+        function toggleCart() {
+            document.getElementById('cartModal').classList.toggle('active');
         }
 
-        function openGroupOrder() { showToast('Group Order Link Generated & Copied to Clipboard!'); }
-        function openGiftModal() { showToast('Gift Meal Feature Unlocked!'); }
+        function sendOrder() {
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
 
-        function initMap() {
-            if (map) return;
-            map = L.map('map').setView([35.1678, 74.8561], 14);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            const riderIcon = L.divIcon({ html: '<i class="fa-solid fa-motorcycle text-red-600 text-xl"></i>', className: 'custom-icon' });
-            riderMarker = L.marker([35.1678, 74.8561], { icon: riderIcon }).addTo(map);
-        }
-
-        function checkoutWhatsApp() {
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const address = document.getElementById('cust-address').value;
-
-            if(!name || !phone || !address || cart.length === 0) {
-                showToast('Please complete order details!');
+            if (Object.keys(cart).length === 0) {
+                alert('Please add items to cart first!');
+                return;
+            }
+            if (!name || !phone || !address) {
+                alert('Please fill out name, phone, and address!');
                 return;
             }
 
-            let msg = `*New Enterprise Order - Crust Pizza*%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Payment:* ${selectedPayment}%0A%0A*Items:*%0A`;
-            cart.forEach(i => { msg += `- ${i.name} (${i.size}): Rs. ${i.price}%0A`; });
+            let itemDetails = '';
+            let total = 0;
 
-            window.open(`https://wa.me/923001234567?text=${msg}`, '_blank');
-            cart = [];
-            updateCartUI();
-            switchTab('tracking');
+            Object.values(cart).forEach(item => {
+                itemDetails += `• ${item.name} x ${item.qty} = Rs. ${item.price * item.qty}%0A`;
+                total += item.price * item.qty;
+            });
+
+            const shopNumber = "923000000000"; // Replace with client's WhatsApp Number
+            const msg = `*NEW ONLINE ORDER - CRUST PIZZA*%0A%0A` +
+                        `*Customer:* ${name}%0A` +
+                        `*Phone:* ${phone}%0A` +
+                        `*Address:* ${address}%0A%0A` +
+                        `*Items Ordered:*%0A${itemDetails}%0A` +
+                        `*Total Bill:* Rs. ${total}`;
+
+            window.open(`https://wa.me/${shopNumber}?text=${msg}`, '_blank');
         }
 
-        function getAIRecommendation() {
-            document.getElementById('ai-result').classList.remove('hidden');
-            document.getElementById('ai-text').innerText = "Suggested: Chicken Fajita Medium (Rs. 1700)";
-        }
-
-        function startVoiceAssistant() {
-            showToast('Listening... Speak your pizza order now!');
-        }
-
-        function quickReorder() {
-            cart.push({ name: 'Chicken Fajita Special', size: 'Medium', price: 1700 });
-            updateCartUI();
-            showToast('Previous Order Re-Added!');
-            switchTab('cart');
-        }
+        // Initialize Products
+        renderProducts(products);
     </script>
 </body>
 </html>
